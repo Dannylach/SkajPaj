@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using NAudio.Wave;
+
+namespace SkajPaj
+{
+    public partial class Form1 : Form
+    {
+        private string path = Application.StartupPath + "\\buffer.wav";
+        private AudioManager audioManager = new AudioManager();
+        private ConnectionManager connectionManager = new ConnectionManager();
+        private DataPacket dataPacket = new DataPacket();
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void RecordBtn_Click(object sender, EventArgs e)
+        {
+            audioManager.StartRecording(path, dataPacket);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            audioManager.StopRecording();
+            connectionManager.SendMessage(dataPacket);
+        }
+
+        private void ExitBtn_Click(object sender, EventArgs e)
+        {
+            connectionManager.Exit();
+        }
+    }
+}
