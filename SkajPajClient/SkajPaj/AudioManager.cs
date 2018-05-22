@@ -11,6 +11,7 @@ namespace SkajPaj
     {
         private WaveIn sourceStream;
         private WaveFileWriter waveWriter;
+        private WaveFileWriter waveWriter2;
         private DataPacket dataPacket;
 
         public void StartRecording(string path, DataPacket packet)
@@ -26,9 +27,11 @@ namespace SkajPaj
             sourceStream.DeviceNumber = devicenum;
             sourceStream.WaveFormat = new WaveFormat(22000, WaveIn.GetCapabilities(devicenum).Channels);
             sourceStream.DataAvailable += sourceStream_DataAvailable;
+            //TODO Send to stream
+            //waveWriter = new WaveFileWriter(dataPacket.Message, sourceStream.WaveFormat);
 
-            waveWriter = new WaveFileWriter(packet.Message.ToString(), sourceStream.WaveFormat);
             waveWriter = new WaveFileWriter(path, sourceStream.WaveFormat);
+            waveWriter2 = new 
 
             sourceStream.StartRecording();
         }

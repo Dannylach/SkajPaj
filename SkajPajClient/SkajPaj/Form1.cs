@@ -16,10 +16,10 @@ namespace SkajPaj
 {
     public partial class Form1 : Form
     {
-        private string path = Application.StartupPath + "\\buffer.wav";
-        private AudioManager audioManager = new AudioManager();
-        private ConnectionManager connectionManager = new ConnectionManager();
-        private DataPacket dataPacket = new DataPacket();
+        private readonly string path = Application.StartupPath + "\\buffer.wav";
+        private readonly AudioManager audioManager = new AudioManager();
+        private readonly ConnectionManager connectionManager = new ConnectionManager();
+        private readonly DataPacket dataPacket = new DataPacket();
 
         public Form1()
         {
