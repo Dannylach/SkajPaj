@@ -37,7 +37,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(50, 90);
-            this.button1.Name = "RecordBtn";
+            this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(137, 38);
             this.button1.TabIndex = 0;
             this.button1.Text = "Record Message";

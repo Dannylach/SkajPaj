@@ -12,14 +12,14 @@ namespace SkajPaj
         private WaveIn sourceStream;
         private WaveFileWriter waveWriter;
         private WaveFileWriter waveWriter2;
-        private DataPacket dataPacket;
+        //private DataPacket dataPacket;
 
         public void StartRecording(string path, DataPacket packet)
         {
             sourceStream = new WaveIn();
-            int devicenum = 0;
+            var devicenum = 0;
 
-            for (int i = 0; i < NAudio.Wave.WaveIn.DeviceCount; i++)
+            for (var i = 0; i < NAudio.Wave.WaveIn.DeviceCount; i++)
             {
                 if (NAudio.Wave.WaveIn.GetCapabilities(i).ProductName.Contains("icrophone"))
                     devicenum = i;
@@ -31,7 +31,7 @@ namespace SkajPaj
             //waveWriter = new WaveFileWriter(dataPacket.Message, sourceStream.WaveFormat);
 
             waveWriter = new WaveFileWriter(path, sourceStream.WaveFormat);
-            waveWriter2 = new 
+            //waveWriter2 = new
 
             sourceStream.StartRecording();
         }
