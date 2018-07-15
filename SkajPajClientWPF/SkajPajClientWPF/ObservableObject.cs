@@ -16,5 +16,6 @@ namespace SkajPajClientWPF
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

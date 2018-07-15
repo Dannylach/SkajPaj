@@ -8,7 +8,7 @@ namespace SkajPajClientWPF.Models
 {
     public class RegistrationModel : ObservableObject
     {
-        private string _login;
+        private string _login = string.Empty;
         public String Login
         {
             get { return _login; }
@@ -19,7 +19,7 @@ namespace SkajPajClientWPF.Models
             }
         }
 
-        private string _password;
+        private string _password = string.Empty;
         public String Password
         {
             get { return _password; }
@@ -30,7 +30,7 @@ namespace SkajPajClientWPF.Models
             }
         }
 
-        private string _avatar;
+        private string _avatar = string.Empty;
         public String Avatar
         {
             get { return _avatar; }
@@ -41,7 +41,7 @@ namespace SkajPajClientWPF.Models
             }
         }
 
-        private string _addressIP;
+        private string _addressIP = string.Empty;
         public String AddressIP
         {
             get { return _addressIP; }
@@ -51,5 +51,10 @@ namespace SkajPajClientWPF.Models
                 OnPropertyChanged();
             }
         }
+
+        public RestWebApiRequest RestWebApiRequest { get => _restWebApiRequest; set => _restWebApiRequest = value; }
+
+        private RestWebApiRequest _restWebApiRequest = new RestWebApiRequest();
+
     }
 }

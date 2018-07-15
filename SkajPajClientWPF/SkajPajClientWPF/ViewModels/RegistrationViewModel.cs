@@ -17,8 +17,10 @@ namespace SkajPajClientWPF.ViewModels
 
         public RegistrationViewModel()
         {
-            RegistrationModel = new RegistrationModel();
-            RegistrationModel.Avatar = "1";
+            RegistrationModel = new RegistrationModel
+            {
+                Avatar = "1"
+            };
         }
 
         public ICommand RegistrationCommand { get { return new RelayCommandWithParams(Registration, param => this.canExecute); } }
@@ -29,22 +31,42 @@ namespace SkajPajClientWPF.ViewModels
             var password = passwordBox.Password;
             RegistrationModel.Password = password.ToString();
             RegistrationModel.AddressIP = new IPHelpfulFunktions().GetLocalIPAddress();
-            //MessageBox.Show(RegistrationModel.Login + "." + RegistrationModel.Password + "." + RegistrationModel.Avatar + "." + RegistrationModel.AddressIP + ".");
+            
 
-            //TO DO 
-            //request to rest api
-            //show dialog if data are bad
+            if (RegistrationModel.Login.Length < 3)
+            {
+                MessageBox.Show("Zbyt krótki login!");
+            }
+            else if (RegistrationModel.Password.Length < 8)
+            {
+                MessageBox.Show("Zbyt krótkie hasło!");
+            }
+            else if (RegistrationModel.Login == RegistrationModel.Password)
+            {
+                MessageBox.Show("Hasło identyczne jak login!");
+            }
+            else
+            {
+                //MessageBox.Show("|" + RegistrationModel.Login + "|" + RegistrationModel.Password + "|" + RegistrationModel.Avatar + "|" + RegistrationModel.AddressIP + "|");
+                if(!RegistrationModel.RestWebApiRequest.CreateAccount(RegistrationModel.Login, RegistrationModel.Password, RegistrationModel.Avatar, RegistrationModel.AddressIP))
+                {
+                    MessageBox.Show("Nieudało się utworzyć konta. Prawdopodobnie login jest już zajęty.");
+                }
+                else
+                {
+                    MessageBox.Show("Udało się utworzyć konto.");
+                    //TO DO http://csharp-dev.pl/2016/08/22/zamykanie-okien-we-wzorcu-mvvm/
+
+                }
+            }
+            
         }
 
         private bool canExecute = true;
 
         public ICommand AvatarRadioButton { get { return new RelayCommandWithParams(AvatarRadioButtonClick, param => this.canExecute); } }
 
-        private void AvatarRadioButtonClick(object avatar)
-        {
-
-            RegistrationModel.Avatar = avatar.ToString();
-        }
+        private void AvatarRadioButtonClick(object avatar) => RegistrationModel.Avatar = avatar.ToString();
 
 
     }
