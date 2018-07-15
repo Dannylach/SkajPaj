@@ -16,6 +16,8 @@ namespace SkajPajClientWPF
         }
         private Action methodToExecute;
         private Func<bool> canExecuteEvaluator;
+        private Action<object> avatarRadioButtonClick;
+
         public RelayCommand(Action methodToExecute, Func<bool> canExecuteEvaluator)
         {
             this.methodToExecute = methodToExecute;
@@ -25,6 +27,12 @@ namespace SkajPajClientWPF
             : this(methodToExecute, null)
         {
         }
+
+        public RelayCommand(Action<object> avatarRadioButtonClick)
+        {
+            this.avatarRadioButtonClick = avatarRadioButtonClick;
+        }
+
         public bool CanExecute(object parameter)
         {
             if (this.canExecuteEvaluator == null)

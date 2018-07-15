@@ -1,0 +1,82 @@
+﻿<Window x:Class="SkajPajClientWPF.Views.RegistrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SkajPajClientWPF.Views"
+        xmlns:local1="clr-namespace:SkajPajClientWPF.ViewModels"
+        mc:Ignorable="d"
+        Title="RegistrationWindow" Height="550" Width="800">
+    <Window.DataContext>
+        <local1:RegistrationViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="600" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="500" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Vertical">
+            <Image Source="..\Images\Logo\logo.PNG" Width="350"/>
+            <TextBlock Text="Rejestracja" FontSize="20" TextAlignment="Center"/>
+            <TextBlock Text="Login" TextAlignment="Center"/>
+            <TextBox Margin="180,0,180,5" Text="{Binding Path = RegistrationModel.Login, Mode = TwoWay}"/>
+            <TextBlock Text="Hasło" TextAlignment="Center"/>
+            <!--<TextBox Margin="180,0,180,10"/>-->
+            <PasswordBox Name="passwordBox"  PasswordChar="•" Margin="180,0,180,5"/>
+            <StackPanel>
+                <StackPanel.Resources>
+                    <Style x:Key="Flag" TargetType="RadioButton">
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </Style.Triggers>
+
+                        <Setter Property="BorderThickness" Value="2"/>
+
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border BorderThickness="{TemplateBinding BorderThickness}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            Background="Transparent"
+                                            Margin="2"
+                                >
+                                        <Image Source="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </StackPanel.Resources>
+
+                <ItemsControl>
+                    <WrapPanel Margin="60,0,60,0">
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="1" Content="../Images/Avatars/1.PNG" Style="{StaticResource Flag}" Width="80" Height="80" IsChecked="True"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="2" Content="../Images/Avatars/3.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="3" Content="../Images/Avatars/4.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="4" Content="../Images/Avatars/5.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="5" Content="../Images/Avatars/6.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="6" Content="../Images/Avatars/7.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="7" Content="../Images/Avatars/8.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="8" Content="../Images/Avatars/9.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="9" Content="../Images/Avatars/10.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="10" Content="../Images/Avatars/11.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="11" Content="../Images/Avatars/12.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="12" Content="../Images/Avatars/2.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                    </WrapPanel>
+                </ItemsControl>
+            </StackPanel>
+
+            <Button Name="RegistrationButton" Content="Rejestracja" Margin="220,20,220,0" Height="30" Command="{Binding RegistrationCommand}" CommandParameter="{Binding ElementName=passwordBox}"/>
+        </StackPanel>
+    </Grid>
+</Window>
