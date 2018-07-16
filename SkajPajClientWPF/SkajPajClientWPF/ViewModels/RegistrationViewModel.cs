@@ -29,9 +29,9 @@ namespace SkajPajClientWPF.ViewModels
         {
             var passwordBox = parameter as PasswordBox;
             var password = passwordBox.Password;
-            RegistrationModel.Password = password.ToString();
+            RegistrationModel.Password = SHA.GenerateSHA256String(password.ToString());
             RegistrationModel.AddressIP = new IPHelpfulFunktions().GetLocalIPAddress();
-            
+
 
             if (RegistrationModel.Login.Length < 3)
             {
@@ -55,8 +55,7 @@ namespace SkajPajClientWPF.ViewModels
                 else
                 {
                     MessageBox.Show("Udało się utworzyć konto.");
-                    //TO DO http://csharp-dev.pl/2016/08/22/zamykanie-okien-we-wzorcu-mvvm/
-
+                    CloseWindow();
                 }
             }
             
@@ -68,6 +67,16 @@ namespace SkajPajClientWPF.ViewModels
 
         private void AvatarRadioButtonClick(object avatar) => RegistrationModel.Avatar = avatar.ToString();
 
+        public event EventHandler RequestClose;
 
+        private void CloseWindow()
+        {
+            EventHandler handler = this.RequestClose;
+
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
     }
 }

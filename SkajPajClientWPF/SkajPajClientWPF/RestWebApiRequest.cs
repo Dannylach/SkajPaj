@@ -58,5 +58,24 @@ namespace SkajPajClientWPF
 
             return false;
         }
+
+        public bool SignIn(string login, string password)
+        {
+            string request = SERVER_DOMAIN + SIGN_IN + "login=" + login + "&password=" + password;
+            string json = makeRequest(request);
+
+            try
+            {
+                SignInRequest signInRequest = JsonConvert.DeserializeObject<SignInRequest>(json);
+
+                return signInRequest.is_sign_in;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return false;
+        }
     }
 }

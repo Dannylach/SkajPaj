@@ -16,4 +16,10 @@ namespace SkajPajClientWPF.Objects
         public string message;
         public bool create_account;
     }
+
+    public class SignInRequest
+    {
+        public string message;
+        public bool is_sign_in;
+    }
 }

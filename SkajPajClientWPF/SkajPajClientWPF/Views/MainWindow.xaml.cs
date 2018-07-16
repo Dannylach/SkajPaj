@@ -1,5 +1,4 @@
-﻿using SkajPajClientWPF.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,22 +15,13 @@ using System.Windows.Shapes;
 namespace SkajPajClientWPF.Views
 {
     /// <summary>
-    /// Interaction logic for RegistrationWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class RegistrationWindow : Window
+    public partial class MainWindow : Window
     {
-        RegistrationViewModel vm = new RegistrationViewModel();
-
-        public RegistrationWindow()
+        public MainWindow()
         {
             InitializeComponent();
-            vm.RequestClose += new EventHandler(CloseWindow);
-            DataContext = vm;
-        }
-
-        public void CloseWindow(Object source, EventArgs args)
-        {
-            Close();
         }
     }
 }

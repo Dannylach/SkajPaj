@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkajPajClientWPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,18 @@ namespace SkajPajClientWPF.Views
     /// </summary>
     public partial class LoginWindow : Window
     {
+        LoginViewModel lw = new LoginViewModel();
+
         public LoginWindow()
         {
             InitializeComponent();
+            lw.RequestClose += new EventHandler(CloseWindow);
+            DataContext = lw;
+        }
+
+        public void CloseWindow(Object source, EventArgs args)
+        {
+            Close();
         }
     }
 }
