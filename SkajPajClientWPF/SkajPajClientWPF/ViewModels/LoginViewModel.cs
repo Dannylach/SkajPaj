@@ -53,7 +53,7 @@ namespace SkajPajClientWPF.ViewModels
                 }
                 else
                 {
-                    MainWindow mainWindow = new MainWindow();
+                    MainWindow mainWindow = new MainWindow(LoginModel.Login, LoginModel.Password);
                     mainWindow.Show();
                     CloseWindow();
                 }

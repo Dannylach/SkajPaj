@@ -13,11 +13,12 @@ namespace SkajPajClientWPF
     public class RestWebApiRequest
     {
         public const string SERVER_DOMAIN_INTERNET = "http://skajpaj.azurewebsites.net/api/";
-        public const string SERVER_DOMAIN_LOCAL = "http://localhost/REST_API_SKAJPAJ_SEVER_PHP/api/";
+        public const string SERVER_DOMAIN_LOCAL = "http://localhost/PHP-REST-API-Skajpaj-server/api/";
 
         public const string SERVER_DOMAIN = SERVER_DOMAIN_LOCAL;
 
         public const string SIGN_IN = "user/sign_in.php?";
+        public const string READ_USER_DATA = "user/read_user_data.php?";
         public const string CREATE_ACCOUNT = "user/create_account.php?";
         public const string CHANGE_PASSWORD = "user/change_password.php?";
         public const string EDIT_ADDRESS_IP = "user/edit_address_ip.php?";
@@ -76,6 +77,28 @@ namespace SkajPajClientWPF
             }
 
             return false;
+        }
+
+        public User ReadUserData(string login, string password)
+        {
+            string request = SERVER_DOMAIN + READ_USER_DATA + "login=" + login + "&password=" + password;
+            string json = makeRequest(request);
+
+            try
+            {
+                ReadUserDataRequest readUserDataRequest = JsonConvert.DeserializeObject<ReadUserDataRequest>(json);
+
+                if (readUserDataRequest.read_data)
+                {
+                    return new User(readUserDataRequest.login, readUserDataRequest.password,
+                        readUserDataRequest.avatar, readUserDataRequest.address_ip);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            return null;
         }
     }
 }

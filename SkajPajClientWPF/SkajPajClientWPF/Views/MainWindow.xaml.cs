@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkajPajClientWPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,20 @@ namespace SkajPajClientWPF.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        MainViewModel mvm;
+
+        public MainWindow(string login, string password)
         {
+            
             InitializeComponent();
+            mvm = new MainViewModel(login, password);
+            mvm.RequestClose += new EventHandler(CloseWindow);
+            DataContext = mvm;
+        }
+
+        public void CloseWindow(Object source, EventArgs args)
+        {
+            Close();
         }
     }
 }

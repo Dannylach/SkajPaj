@@ -22,4 +22,14 @@ namespace SkajPajClientWPF.Objects
         public string message;
         public bool is_sign_in;
     }
+
+    public class ReadUserDataRequest
+    {
+        public string message;
+        public bool read_data;
+        public string login;
+        public string password;
+        public string avatar;
+        public string address_ip;
+    }
 }

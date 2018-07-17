@@ -8,7 +8,7 @@ namespace SkajPajClientWPF.Models
 {
     public class LoginModel : ObservableObject
     {
-        private string _login = string.Empty;
+        private string _login = "test2";// string.Empty;
         public String Login
         {
             get { return _login; }
