@@ -32,4 +32,24 @@ namespace SkajPajClientWPF.Objects
         public string avatar;
         public string address_ip;
     }
+
+    public class ListOfFriendsRequest
+    {
+        public string message;
+        public int friends_number;
+        public IList<FriendsRecord> records;
+    }
+
+    public class FriendsRecord
+    {
+        public string login;
+        public string avatar;
+        public string address_ip;
+    }
+
+    public class AddFriendRequest
+    {
+        public string message;
+        public bool add_friend;
+    }
 }

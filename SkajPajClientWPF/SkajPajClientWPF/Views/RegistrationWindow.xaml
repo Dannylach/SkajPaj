@@ -50,7 +50,7 @@
                                             Background="Transparent"
                                             Margin="2"
                                 >
-                                        <Image Source="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <Image Source="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Fill"/>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>

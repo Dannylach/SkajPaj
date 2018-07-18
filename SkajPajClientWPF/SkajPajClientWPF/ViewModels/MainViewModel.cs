@@ -1,10 +1,6 @@
 ﻿using SkajPajClientWPF.Models;
 using SkajPajClientWPF.Views;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -23,6 +19,9 @@ namespace SkajPajClientWPF.ViewModels
             {
                 MessageBox.Show(ex.ToString());
             }
+
+            MainModel.FriendList = MainModel.RestWebApiRequest.ListOfFriends(login, password);
+            
         }
 
         public MainViewModel()
@@ -52,6 +51,22 @@ namespace SkajPajClientWPF.ViewModels
             LoginWindow loginnWindow = new LoginWindow();
             loginnWindow.Show();
             CloseWindow();
+        }
+
+        public ICommand AddFriendCommand { get { return new RelayCommand(AddFriend); } }
+
+        private void AddFriend()
+        {
+            if (MainModel.UserData.Login != MainModel.LoginAddFriend)
+            {
+                if (MainModel.RestWebApiRequest.AddFriend(MainModel.UserData.Login, MainModel.UserData.Password, MainModel.LoginAddFriend)){
+                    MainModel.FriendList = MainModel.RestWebApiRequest.ListOfFriends(MainModel.UserData.Login, MainModel.UserData.Password);
+                }
+                else
+                {
+                    MessageBox.Show("Nieudało się dodać znajomego do listy kontaktów. Sprawdź czy login jest poprawny.");
+                }
+            }
         }
     }
 }

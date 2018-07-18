@@ -139,7 +139,9 @@
   <ItemGroup>
     <Resource Include="Images\Logo\logo.PNG" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\Avatars\DEFAULT.PNG" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Avatars\1.PNG" />
     <Resource Include="Images\Avatars\10.PNG" />

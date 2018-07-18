@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using SkajPajClientWPF.Objects;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -99,6 +100,55 @@ namespace SkajPajClientWPF
                 MessageBox.Show(e.ToString());
             }
             return null;
+        }
+
+        public ObservableCollection<User> ListOfFriends(string login, string password)
+        {
+            string request = SERVER_DOMAIN + LIST_OF_FRIENDS + "login=" + login + "&password=" + password;
+            string json = makeRequest(request);
+
+            try
+            {
+                ListOfFriendsRequest listOfFriendsRequest = JsonConvert.DeserializeObject<ListOfFriendsRequest>(json);
+
+                if (listOfFriendsRequest.friends_number>0)
+                {
+                    ObservableCollection<User> result = new ObservableCollection<User>();
+                    /*foreach(FriendsRecord f in listOfFriendsRequest.records)
+                    {
+                        result.Add(new User(f.login, f.avatar, f.address_ip));
+                    }*/
+                    for(int i=listOfFriendsRequest.records.Count-1; i>=0; i--)
+                    {
+                        result.Add(new User(listOfFriendsRequest.records[i].login, listOfFriendsRequest.records[i].avatar, listOfFriendsRequest.records[i].address_ip));
+                    }
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            return null;
+        }
+
+        public bool AddFriend(string login, string password, string friend_login)
+        {
+            string request = SERVER_DOMAIN + ADD_FRIEND + "login=" + login + "&password=" + password + "&friend_login=" + friend_login;
+            string json = makeRequest(request);
+
+            try
+            {
+                AddFriendRequest signInRequest = JsonConvert.DeserializeObject<AddFriendRequest>(json);
+
+                return signInRequest.add_friend;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return false;
         }
     }
 }

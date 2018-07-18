@@ -19,11 +19,21 @@ namespace SkajPajClientWPF.Models
         public User UserData { get => _userData; set => _userData = value; }
 
         private ObservableCollection<User> _friendList;
-        public ObservableCollection<User> FriendList { get => _friendList; set => _friendList = value; }
+        public ObservableCollection<User> FriendList { get => _friendList;
+            set
+            {
+                _friendList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _loginAddFriend;
+        public string LoginAddFriend { get => _loginAddFriend; set => _loginAddFriend = value; }
+
+        private string _callLogin;
+        public string CallLogin { get => _callLogin; set => _callLogin = value; }
 
         private RestWebApiRequest _restWebApiRequest = new RestWebApiRequest();
         public RestWebApiRequest RestWebApiRequest { get => _restWebApiRequest; set => _restWebApiRequest = value; }
-
-        
     }
 }

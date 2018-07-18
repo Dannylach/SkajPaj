@@ -21,13 +21,27 @@ namespace SkajPajClientWPF.Objects
             Address_ip = ip;
         }
 
+        public User(string l, string a, string ip)
+        {
+            Login = l;
+            Password = String.Empty;
+            Avatar = a;
+            Address_ip = ip;
+        }
+
         public string Login { get => _login; set => _login = value; }
         public string Password { get => _password; set => _password = value; }
         public string Avatar {
             get
             {
-                string tmp = "..\\Images\\Avatars\\" + _avatar +".PNG";
-                return tmp;
+                for(int i = 1; i < 13; i++)
+                {
+                    if (_avatar==i.ToString())
+                    {
+                        string tmp = "..\\Images\\Avatars\\" + _avatar + ".PNG";
+                    }
+                }
+                return "..\\Images\\Avatars\\DEFAULT.PNG"; ;
             }
             set
             {
