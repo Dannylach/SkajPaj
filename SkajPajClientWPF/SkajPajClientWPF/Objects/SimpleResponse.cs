@@ -58,4 +58,21 @@ namespace SkajPajClientWPF.Objects
         public string message;
         public bool delete_friend;
     }
+
+    public class CallListRequest
+    {
+        public IList<CallRecord> records;
+        public string message;
+        public int calls_number;
+    }
+
+    public class CallRecord
+    {
+        public string login;
+        public string avatar;
+        public string address_ip;
+        public DateTime start_date;
+        public string is_received;
+        public DateTime end_date;
+    }
 }

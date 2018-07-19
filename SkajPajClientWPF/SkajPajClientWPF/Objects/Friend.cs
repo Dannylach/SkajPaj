@@ -13,11 +13,7 @@ namespace SkajPajClientWPF.Objects
         public Friend(string l, string a, string ip) : base(l, a, ip)
         {
         }
-
-        public Friend(string l, string p, string a, string ip) : base(l, p, a, ip)
-        {
-        }
-
+        
         public ICommand DeleteFriendCommand { get { return new RelayCommand(DeleteFriend); } }
 
         private void DeleteFriend()

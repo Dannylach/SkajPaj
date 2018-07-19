@@ -169,5 +169,35 @@ namespace SkajPajClientWPF
 
             return false;
         }
+
+        public ObservableCollection<Call> CallList(string login, string password)
+        {
+            string request = SERVER_DOMAIN + CALL_LIST + "login=" + login + "&password=" + password;
+            string json = makeRequest(request);
+
+            try
+            {
+                CallListRequest callListRequest = JsonConvert.DeserializeObject<CallListRequest>(json);
+
+                if (callListRequest.calls_number > 0)
+                {
+                    ObservableCollection<Call> result = new ObservableCollection<Call>();
+                    for (int i = callListRequest.records.Count - 1; i >= 0; i--)
+                    {
+                        Call tmp = new Call(callListRequest.records[i].login, callListRequest.records[i].avatar, callListRequest.records[i].address_ip, callListRequest.records[i].start_date);
+                        if (callListRequest.records[i].is_received == "f") tmp.IsReceived = "Nie odebrane";
+                        else tmp.IsReceived = "Odebrane";
+                        if (callListRequest.records[i].end_date != null) tmp.EndDate = callListRequest.records[i].end_date;
+                        result.Add(tmp);
+                    }
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            return new ObservableCollection<Call>();
+        }
     }
 }

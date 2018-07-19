@@ -22,6 +22,7 @@ namespace SkajPajClientWPF.ViewModels
             }
 
             UpdateFriendList();
+            UpdateCallList();
         }
 
         private void UpdateFriendList()
@@ -30,6 +31,15 @@ namespace SkajPajClientWPF.ViewModels
             foreach (Friend f in MainModel.FriendList)
             {
                 f.ClickDelete += new EventHandler<FriendEventArgs>(DeleteFriend);
+            }
+        }
+
+        private void UpdateCallList()
+        {
+            MainModel.CallList = MainModel.RestWebApiRequest.CallList(MainModel.UserData.Login, MainModel.UserData.Password);
+            foreach (Call f in MainModel.CallList)
+            {
+                //f.ClickDelete += new EventHandler<FriendEventArgs>(DeleteFriend);
             }
         }
 

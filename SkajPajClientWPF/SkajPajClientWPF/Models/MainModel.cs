@@ -27,6 +27,17 @@ namespace SkajPajClientWPF.Models
             }
         }
 
+        private ObservableCollection<Call> _callList;
+        public ObservableCollection<Call> CallList
+        {
+            get => _callList;
+            set
+            {
+                _callList = value;
+                OnPropertyChanged();
+            }
+        }
+
         private string _loginAddFriend;
         public string LoginAddFriend { get => _loginAddFriend; set => _loginAddFriend = value; }
 
