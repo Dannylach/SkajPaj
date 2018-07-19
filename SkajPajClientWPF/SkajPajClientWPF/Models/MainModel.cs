@@ -18,8 +18,8 @@ namespace SkajPajClientWPF.Models
         private User _userData;
         public User UserData { get => _userData; set => _userData = value; }
 
-        private ObservableCollection<User> _friendList;
-        public ObservableCollection<User> FriendList { get => _friendList;
+        private ObservableCollection<Friend> _friendList;
+        public ObservableCollection<Friend> FriendList { get => _friendList;
             set
             {
                 _friendList = value;

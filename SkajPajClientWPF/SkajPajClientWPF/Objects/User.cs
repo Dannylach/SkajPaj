@@ -38,7 +38,7 @@ namespace SkajPajClientWPF.Objects
                 {
                     if (_avatar==i.ToString())
                     {
-                        string tmp = "..\\Images\\Avatars\\" + _avatar + ".PNG";
+                        return "..\\Images\\Avatars\\" + _avatar + ".PNG";
                     }
                 }
                 return "..\\Images\\Avatars\\DEFAULT.PNG"; ;

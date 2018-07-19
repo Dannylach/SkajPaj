@@ -102,7 +102,7 @@ namespace SkajPajClientWPF
             return null;
         }
 
-        public ObservableCollection<User> ListOfFriends(string login, string password)
+        public ObservableCollection<Friend> ListOfFriends(string login, string password)
         {
             string request = SERVER_DOMAIN + LIST_OF_FRIENDS + "login=" + login + "&password=" + password;
             string json = makeRequest(request);
@@ -113,23 +113,23 @@ namespace SkajPajClientWPF
 
                 if (listOfFriendsRequest.friends_number>0)
                 {
-                    ObservableCollection<User> result = new ObservableCollection<User>();
+                    ObservableCollection<Friend> result = new ObservableCollection<Friend>();
                     /*foreach(FriendsRecord f in listOfFriendsRequest.records)
                     {
                         result.Add(new User(f.login, f.avatar, f.address_ip));
                     }*/
                     for(int i=listOfFriendsRequest.records.Count-1; i>=0; i--)
                     {
-                        result.Add(new User(listOfFriendsRequest.records[i].login, listOfFriendsRequest.records[i].avatar, listOfFriendsRequest.records[i].address_ip));
+                        result.Add(new Friend(listOfFriendsRequest.records[i].login, listOfFriendsRequest.records[i].avatar, listOfFriendsRequest.records[i].address_ip));
                     }
-                    return result;
+                    return result; 
                 }
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
-            return null;
+            return new ObservableCollection<Friend>();
         }
 
         public bool AddFriend(string login, string password, string friend_login)
@@ -139,9 +139,28 @@ namespace SkajPajClientWPF
 
             try
             {
-                AddFriendRequest signInRequest = JsonConvert.DeserializeObject<AddFriendRequest>(json);
+                AddFriendRequest addFriendRequest = JsonConvert.DeserializeObject<AddFriendRequest>(json);
 
-                return signInRequest.add_friend;
+                return addFriendRequest.add_friend;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return false;
+        }
+
+        public bool DeleteFriend(string login, string password, string friend_login)
+        {
+            string request = SERVER_DOMAIN + DELETE_FRIEND + "login=" + login + "&password=" + password + "&friend_login=" + friend_login;
+            string json = makeRequest(request);
+
+            try
+            {
+                DeleteFriendRequest deleteFriendRequest = JsonConvert.DeserializeObject<DeleteFriendRequest>(json);
+
+                return deleteFriendRequest.delete_friend;
             }
             catch (Exception e)
             {

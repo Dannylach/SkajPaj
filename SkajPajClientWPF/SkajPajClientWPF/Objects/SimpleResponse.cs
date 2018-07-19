@@ -52,4 +52,10 @@ namespace SkajPajClientWPF.Objects
         public string message;
         public bool add_friend;
     }
+
+    public class DeleteFriendRequest
+    {
+        public string message;
+        public bool delete_friend;
+    }
 }

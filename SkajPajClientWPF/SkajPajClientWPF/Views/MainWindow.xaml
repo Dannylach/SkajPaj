@@ -50,14 +50,14 @@
 
         <TextBlock Grid.Row="2" Text="Kontakty:" FontSize="15" Margin="10,0,0,0"/>
 
-        <ListView Grid.Row="3" Margin="10,5,10,10" ItemsSource="{Binding MainModel.FriendList}" ScrollViewer.VerticalScrollBarVisibility="Visible" >
+        <ListView Name="FriendsListView" Grid.Row="3" Margin="10,5,10,10" ItemsSource="{Binding MainModel.FriendList}" ScrollViewer.VerticalScrollBarVisibility="Visible" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <Image Width="50" Height="50" Source="{Binding Avatar}" Margin="5"/>
                         <TextBlock Text="{Binding Login}" Margin="20,20,20,0" FontSize="18" Width="80"/>
-                        <Button Content="Usuń" Margin="15,15,0,15" Width="70" FontSize="14" Background="OrangeRed"/>
-                        <Button Content="Zadzwoń" Margin="15,15,0,15" Width="70" FontSize="14" Background="GreenYellow"/>
+                        <Button Content="Usuń" Margin="15,15,0,15" Width="70" FontSize="14" Background="OrangeRed" Command="{Binding DeleteFriendCommand}"/>
+                        <Button Content="Zadzwoń" Margin="15,15,0,15" Width="70" FontSize="14" Background="GreenYellow" Command="{Binding CallFriendCommand}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

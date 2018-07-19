@@ -61,17 +61,17 @@
                 <ItemsControl>
                     <WrapPanel Margin="60,0,60,0">
                         <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="1" Content="../Images/Avatars/1.PNG" Style="{StaticResource Flag}" Width="80" Height="80" IsChecked="True"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="2" Content="../Images/Avatars/3.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="3" Content="../Images/Avatars/4.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="4" Content="../Images/Avatars/5.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="5" Content="../Images/Avatars/6.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="6" Content="../Images/Avatars/7.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="7" Content="../Images/Avatars/8.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="8" Content="../Images/Avatars/9.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="9" Content="../Images/Avatars/10.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="10" Content="../Images/Avatars/11.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="11" Content="../Images/Avatars/12.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
-                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="12" Content="../Images/Avatars/2.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="2" Content="../Images/Avatars/2.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="3" Content="../Images/Avatars/3.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="4" Content="../Images/Avatars/4.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="5" Content="../Images/Avatars/5.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="6" Content="../Images/Avatars/6.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="7" Content="../Images/Avatars/7.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="8" Content="../Images/Avatars/8.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="9" Content="../Images/Avatars/9.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="10" Content="../Images/Avatars/10.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="11" Content="../Images/Avatars/11.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
+                        <RadioButton Command="{Binding AvatarRadioButton}" CommandParameter="12" Content="../Images/Avatars/12.PNG" Style="{StaticResource Flag}" Width="80" Height="80"/>
                     </WrapPanel>
                 </ItemsControl>
             </StackPanel>

@@ -67,6 +67,7 @@
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\RegistrationModel.cs" />
     <Compile Include="Models\TestRestApiModel.cs" />
+    <Compile Include="Objects\Friend.cs" />
     <Compile Include="Objects\SimpleResponse.cs" />
     <Compile Include="Objects\User.cs" />
     <Compile Include="ObservableObject.cs" />
