@@ -56,8 +56,8 @@
                     <StackPanel Orientation="Horizontal">
                         <Image Width="50" Height="50" Source="{Binding Avatar}" Margin="5"/>
                         <TextBlock Text="{Binding Login}" Margin="20,20,20,0" FontSize="18" Width="80"/>
-                        <Button Content="Usuń" Margin="15,15,0,15" Width="70" FontSize="14" Background="OrangeRed"/>
-                        <Button Content="Zadzwoń" Margin="15,15,0,15" Width="70" FontSize="14" Background="GreenYellow"/>
+                        <Button Content="Usuń" Margin="15,15,0,15" Width="70" FontSize="14" Background="OrangeRed" Command="{Binding DeleteFriendCommand}"/>
+                        <Button Content="Zadzwoń" Margin="15,15,0,15" Width="70" FontSize="14" Background="GreenYellow" Command="{Binding CallFriendCommand}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -65,15 +65,18 @@
 
         <TextBlock Grid.Column="1" Grid.Row="2" Text="Połączenia:" FontSize="15" Margin="10,0,0,0"/>
 
-        <ListView Grid.Column="1" Grid.Row="3" Margin="10,5,10,10">
+        <ListView Grid.Column="1" Grid.Row="3" Margin="10,5,10,10" ItemsSource="{Binding MainModel.CallList}" ScrollViewer.VerticalScrollBarVisibility="Visible" >
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <Image />
-                        <TextBlock />
-                        <TextBlock />
-                        <Button/>
-                        <Button/>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="50" Height="50" Source="{Binding Avatar}" Margin="5"/>
+                        <TextBlock Text="{Binding Login}" Margin="20,20,20,0" FontSize="18" Width="70"/>
+                        <StackPanel>
+                            <TextBlock Text="{Binding IsReceived}"/>
+                            <TextBlock Text="{Binding StartDateString}"/>
+                            <TextBlock Text="{Binding Time}"/> 
+                        </StackPanel>
+                        <Button Content="Zadzwoń" Background="LawnGreen" Margin="15,15,0,15" Width="70"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

@@ -1,4 +1,5 @@
 ﻿using SkajPajClientWPF.Models;
+using SkajPajClientWPF.Objects;
 using SkajPajClientWPF.Views;
 using System;
 using System.Windows;
@@ -23,8 +24,32 @@ namespace SkajPajClientWPF.ViewModels
                 MessageBox.Show(ex.ToString());
             }
 
-            MainModel.FriendList = MainModel.RestWebApiRequest.ListOfFriends(login, password);
-            
+            UpdateFriendList();
+            UpdateCallList();
+        }
+
+        private void UpdateFriendList()
+        {
+            MainModel.FriendList = MainModel.RestWebApiRequest.ListOfFriends(MainModel.UserData.Login, MainModel.UserData.Password);
+            foreach (Friend f in MainModel.FriendList)
+            {
+                f.ClickDelete += new EventHandler<FriendEventArgs>(DeleteFriend);
+            }
+        }
+
+        private void UpdateCallList()
+        {
+            MainModel.CallList = MainModel.RestWebApiRequest.CallList(MainModel.UserData.Login, MainModel.UserData.Password);
+            foreach (Call f in MainModel.CallList)
+            {
+                //f.ClickDelete += new EventHandler<FriendEventArgs>(DeleteFriend);
+            }
+        }
+
+        private void DeleteFriend(object sender, FriendEventArgs f)
+        {
+            MainModel.RestWebApiRequest.DeleteFriend(MainModel.UserData.Login, MainModel.UserData.Password, f.Login);
+            UpdateFriendList();
         }
 
         public MainViewModel()
@@ -63,7 +88,7 @@ namespace SkajPajClientWPF.ViewModels
             if (MainModel.UserData.Login != MainModel.LoginAddFriend)
             {
                 if (MainModel.RestWebApiRequest.AddFriend(MainModel.UserData.Login, MainModel.UserData.Password, MainModel.LoginAddFriend)){
-                    MainModel.FriendList = MainModel.RestWebApiRequest.ListOfFriends(MainModel.UserData.Login, MainModel.UserData.Password);
+                    UpdateFriendList();
                 }
                 else
                 {
