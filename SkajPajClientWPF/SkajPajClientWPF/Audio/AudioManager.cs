@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using NAudio.Wave;
@@ -14,14 +15,14 @@ namespace SkajPajClientWPF
         private WaveFileWriter waveWriter2;
         //private DataPacket dataPacket;
 
-        public void StartRecording(string path)
+        public void StartRecording(string path, Socket sendingSocket)
         {
             sourceStream = new WaveIn();
             var devicenum = 0;
 
             for (var i = 0; i < WaveIn.DeviceCount; i++)
             {
-                if (NAudio.Wave.WaveIn.GetCapabilities(i).ProductName.Contains("icrophone"))
+                if (WaveIn.GetCapabilities(i).ProductName.Contains("icrophone"))
                     devicenum = i;
             }
             sourceStream.DeviceNumber = devicenum;
@@ -29,6 +30,7 @@ namespace SkajPajClientWPF
             sourceStream.DataAvailable += sourceStream_DataAvailable;
             //TODO Send to stream
             //waveWriter = new WaveFileWriter(dataPacket.Message, sourceStream.WaveFormat);
+            
 
             waveWriter = new WaveFileWriter(path, sourceStream.WaveFormat);
             //waveWriter2 = new

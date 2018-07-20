@@ -3,11 +3,14 @@ using SkajPajClientWPF.Views;
 using System;
 using System.Windows;
 using System.Windows.Input;
+using SkajPajClientWPF.Audio;
 
 namespace SkajPajClientWPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
+        public CallingManager callingManager = new CallingManager();
+
         public MainViewModel(string login, string password)
         {
             MainModel = new MainModel();

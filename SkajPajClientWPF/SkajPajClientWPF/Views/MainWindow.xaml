@@ -45,7 +45,7 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
             <TextBox Width="215" Margin="10,5,5,5" Text="{Binding MainModel.CallLogin}" />
-            <Button Content="Zadzwoń" Margin="10,5,0,5" Width="140" Background="Chartreuse"/>
+            <Button Content="Zadzwoń" Margin="10,5,0,5" Width="140" Background="Chartreuse" Click="Button_Click"/>
         </StackPanel>
 
         <TextBlock Grid.Row="2" Text="Kontakty:" FontSize="15" Margin="10,0,0,0"/>
