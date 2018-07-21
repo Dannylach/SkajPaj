@@ -75,4 +75,10 @@ namespace SkajPajClientWPF.Objects
         public string is_received;
         public DateTime end_date;
     }
+
+    public class ChangePasswordRequest
+    {
+        public string message;
+        public bool change_password;
+    }
 }

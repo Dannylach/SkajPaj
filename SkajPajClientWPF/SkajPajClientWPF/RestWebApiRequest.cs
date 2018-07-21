@@ -199,5 +199,24 @@ namespace SkajPajClientWPF
             }
             return new ObservableCollection<Call>();
         }
+
+        public bool ChangePassword(string login, string oldPassword, string newPassword)
+        {
+            string request = SERVER_DOMAIN + CHANGE_PASSWORD + "login=" + login + "&old_password=" + oldPassword + "&new_password=" + newPassword;
+            string json = makeRequest(request);
+
+            try
+            {
+                ChangePasswordRequest changePasswordRequest = JsonConvert.DeserializeObject<ChangePasswordRequest>(json);
+
+                return changePasswordRequest.change_password;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return false;
+        }
     }
 }

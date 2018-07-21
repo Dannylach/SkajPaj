@@ -78,14 +78,19 @@
     <Compile Include="Objects\SimpleResponse.cs" />
     <Compile Include="Objects\User.cs" />
     <Compile Include="ObservableObject.cs" />
+    <Compile Include="PasswordConvert.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="RelayCommanWithParamscs.cs" />
     <Compile Include="RestClient.cs" />
     <Compile Include="RestWebApiRequest.cs" />
+    <Compile Include="ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RegistrationViewModel.cs" />
     <Compile Include="ViewModels\TestApiViewModel.cs" />
+    <Compile Include="Views\ChangePasswordWindow.xaml.cs">
+      <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -127,6 +132,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ChangePasswordWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LoginWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -96,5 +96,13 @@ namespace SkajPajClientWPF.ViewModels
                 }
             }
         }
+
+        public ICommand ChangePasswordCommand { get { return new RelayCommand(ChangePassword); } }
+
+        private void ChangePassword()
+        {
+            ChangePasswordWindow loginnWindow = new ChangePasswordWindow(MainModel.UserData.Login);
+            loginnWindow.ShowDialog();
+        }
     }
 }
