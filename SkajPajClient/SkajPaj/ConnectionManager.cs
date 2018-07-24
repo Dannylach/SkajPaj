@@ -16,32 +16,30 @@ namespace SkajPaj
     {
         //TODO Sending and receiving data out of local network
         private Socket clientSocket;
+        private UdpClient udpClient;
         private string clientName;
         private EndPoint serverEndPoint;
+        private IPEndPoint serverIpEndPoint;
         private byte[] dataStream = new byte[1024];
 
         public void Connect(DataPacket dataPacket)
         {
             try
             {
-                //TODO Change naming
+                //TODO Change naming for login
                 clientName = "Testowy";
 
                 dataPacket.SenderName = clientName;
                 dataPacket.Message = null;
                 dataPacket.ChatDataIdentifier = DataIdentifier.LogIn;
 
-                clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                //TODO Change IP to send not on local machine
-                var serverIp = IPAddress.Parse("127.0.0.1");
-                var server = new IPEndPoint(serverIp, 30000);
+                //TODO Change IP to send to ip from serwer
+                var serverIp = IPAddress.Parse("192.168.1.33");
+                serverIpEndPoint = new IPEndPoint(serverIp, 3000);
+                udpClient = new UdpClient();
 
-                serverEndPoint = (EndPoint)server;
-                var data = dataPacket.PackMessage();
-
-                clientSocket.BeginSendTo(data, 0, data.Length, SocketFlags.None, serverEndPoint, SendData, null);
-                dataStream = new byte[1024];
-                clientSocket.BeginReceiveFrom(dataStream, 0, dataStream.Length, SocketFlags.None, ref serverEndPoint, ReceiveData, null);
+                serverEndPoint = (EndPoint)serverIpEndPoint;
+                
             }
             catch (Exception ex)
             {
@@ -75,29 +73,24 @@ namespace SkajPaj
             try
             {
                 dataPacket.SenderName = clientName;
+                var data = new byte[4];
+                data[0] = 1;
+                data[2] = 0;
+                data[3] = 1;
 
-                byte[] byteData = dataPacket.PackMessage();
-
-                clientSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, serverEndPoint, new AsyncCallback(this.SendData), null);
+                Connect(dataPacket);
+                
+                udpClient.BeginSend(data, data.Length, serverIpEndPoint, null, null);
+                dataStream = new byte[1024];
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Send Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        
 
-        private void SendData(IAsyncResult ar)
-        {
-            try
-            {
-                clientSocket.EndSend(ar);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Send Data: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
+        //TODO Receive by UpdClient
         private void ReceiveData(IAsyncResult ar)
         {
             try

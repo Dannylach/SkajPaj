@@ -38,7 +38,7 @@ namespace SkajPaj
 
         public void StopRecording()
         {
-            sourceStream.StopRecording();
+            //sourceStream.StopRecording();
         }
 
         private void sourceStream_DataAvailable(object sender, WaveInEventArgs e)
