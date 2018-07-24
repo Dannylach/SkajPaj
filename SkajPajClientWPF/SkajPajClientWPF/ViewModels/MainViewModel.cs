@@ -10,7 +10,7 @@ namespace SkajPajClientWPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        public CallingManager callingManager = new CallingManager();
+        public AudioManager callingManager = new AudioManager();
 
         public MainViewModel(string login, string password)
         {
