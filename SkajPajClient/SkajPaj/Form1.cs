@@ -19,7 +19,7 @@ namespace SkajPaj
         private readonly AudioManager audioManager = new AudioManager();
         private readonly ConnectionManager connectionManager = new ConnectionManager();
         private string userName = "Daniel";
-        private string ip = "192.168.1.14";
+        private string ip = "192.168.1.33";
 
         public Form1()
         {

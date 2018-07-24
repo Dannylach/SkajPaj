@@ -1,88 +1,201 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using NAudio.Wave;
 
-namespace SkajPaj
+namespace SkajPajClientWPF.Audio
 {
     public class AudioManager
     {
-        private WaveIn sourceStream;
-        private WaveFileWriter waveWriter;
+        static WaveIn waveIn;
+        static WaveOut waveOut;
+        static WaveFileWriter waveWriter;
+        static Thread recieve_thread;
+        static UdpClient udpClient;
+        static IPEndPoint ipEndPoint;
+        static byte[] incoming;
+        static int port = 3000;
+
         private MemoryStream memoryStream;
-        private byte[] buffer;
         private int packetNumber = 0;
+        private bool running = true;
+        private string clientName;
+        private EndPoint friendEndPoint;
 
-        public void StartRecording(ConnectionManager connectionManager, string userName)
+
+        public void Initialize(string userLogin)
         {
-            sourceStream = new WaveIn();
-            var devicenum = 0;
-
-            for (var i = 0; i < NAudio.Wave.WaveIn.DeviceCount; i++)
+            try
             {
-                if (NAudio.Wave.WaveIn.GetCapabilities(i).ProductName.Contains("icrophone"))
-                    devicenum = i;
+                clientName = userLogin;
+                udpClient = new UdpClient(port);
+
+                waveIn = new WaveIn();
+                waveIn.BufferMilliseconds = 100;
+                waveIn.NumberOfBuffers = 10;
+                waveOut = new WaveOut();
+
+                waveIn.DeviceNumber = 0;
+                waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
+
+                waveIn.WaveFormat = new WaveFormat(44200, 2);
+                waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStopped);
+
+                memoryStream = new MemoryStream();
+                waveWriter = new WaveFileWriter(memoryStream, waveIn.WaveFormat);
+
+                udpClient = new UdpClient(40015);
             }
-            sourceStream.DeviceNumber = devicenum;
-            sourceStream.WaveFormat = new WaveFormat(22000, WaveIn.GetCapabilities(devicenum).Channels);
-            sourceStream.DataAvailable += sourceStream_DataAvailable;
-
-            memoryStream = new MemoryStream();
-            waveWriter = new WaveFileWriter(memoryStream, sourceStream.WaveFormat);
-
-            var dataPacket = new DataPacket(buffer, userName, packetNumber);
-
-            connectionManager.SendMessage(dataPacket);
-
-            sourceStream.StartRecording();
-        }
-
-        public static byte[] ReadFully(Stream input)
-        {
-            byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
+            catch (Exception ex)
             {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
-                return ms.ToArray();
+                //TODO Signal error
             }
         }
 
-        public void StopRecording()
+        public void StartCall(string ip)
         {
-            packetNumber = 0;
-            sourceStream.StopRecording();
-            var data = ReadFully(memoryStream);
-            memoryStream.Close();
+
+            ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 40015);
+            udpClient.Send(new byte[1], 1, ipEndPoint);
+            recieve_thread = new Thread(recv);
+            recieve_thread.Start();
+
+            waveIn.StartRecording();
         }
 
-        public void EndCall()
+        void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
-            StopRecording();
-            waveWriter.Close();
+            udpClient.Send(e.Buffer, e.Buffer.Length, ipEndPoint);
         }
 
-        public void PlayMessage(byte[] message)
+        void waveIn_RecordingStopped(object sender, EventArgs e)
         {
-            WaveOut waveOut = new WaveOut();
-            byte[] bytes = new byte[1024];
+            waveIn.Dispose();
+            waveIn = null;
+        }
 
-            IWaveProvider provider = new RawSourceWaveStream(
-                new MemoryStream(bytes), new WaveFormat());
+        void Exit()
+        {
+            if (waveIn == null) return;
+            recieve_thread.Abort();
+            waveIn.StopRecording();
+            waveOut.Dispose();
+            waveOut = null;
+            udpClient = null;
+            running = false;
+        }
 
-            waveOut.Init(provider);
+        static void recv()
+        {
+            BufferedWaveProvider PlayBuffer = new BufferedWaveProvider(waveIn.WaveFormat);
+            waveOut.Init(PlayBuffer);
             waveOut.Play();
+
+            while (true)
+            {
+                incoming = udpClient.Receive(ref ipEndPoint);
+                PlayBuffer.AddSamples(incoming, 0, incoming.Length);
+            }
+        }
+
+        public void BeginCall(string ipToCall)
+        {
+            try
+            {
+                running = true;
+                var message = "HELLO " + GetLocalIPAddress();
+                var messageToByte = Encoding.ASCII.GetBytes(message);
+                var serverIp = IPAddress.Parse(ipToCall);
+                var dataPacket = new DataPacket(messageToByte, clientName, 0);
+
+                ipEndPoint = new IPEndPoint(serverIp, port);
+                friendEndPoint = (EndPoint)ipEndPoint;
+
+                SendMessage(dataPacket);
+            }
+            catch (Exception ex)
+            {
+                
+            }
+        }
+
+        public void SendMessage(DataPacket dataPacket)
+        {
+            try
+            {
+                var dataToSend = dataPacket.PackMessage();
+
+                udpClient.BeginSend(dataToSend, dataToSend.Length, ipEndPoint, null, null);
+            }
+            catch (Exception ex)
+            {
+                //TODO Signal error
+            }
         }
 
 
-        private void sourceStream_DataAvailable(object sender, WaveInEventArgs e)
+        public void ListenForMessage()
         {
-            if (waveWriter == null) return;
-            waveWriter.Write(e.Buffer, 0, e.BytesRecorded);
-            waveWriter.Flush();
-            buffer = e.Buffer;
-            packetNumber++;
+            try
+            {
+                UDPListener();
+            }
+            catch (Exception e)
+            {
+                //TODO Signal error
+            }
+        }
+
+        private void UDPListener()
+        {
+            Task.Run(async () =>
+            {
+                using (udpClient = new UdpClient(port))
+                {
+                    while (running)
+                    {
+                        var receivedResults = await udpClient.ReceiveAsync();
+                        var receivedByte = receivedResults.Buffer;
+                        ReceivedMessage(receivedByte);
+
+                    }
+                }
+            });
+        }
+
+        private string ReceivedMessage(byte[] message)
+        {
+            DataPacket dataPacket = new DataPacket();
+            dataPacket = dataPacket.UnpackMessage(message);
+            var receivedString = Encoding.ASCII.GetString(dataPacket.Message);
+
+            if (receivedString.Contains("HELLO"))
+                BeginCall(HelloResponse(receivedString));
+            else if (receivedString.Contains("BYE"))
+            {
+                Exit();
+            }
+
+            return null;
+        }
+
+        string HelloResponse(string message)
+        {
+            return message.Remove(0, 6);
+        }
+
+        private static string GetLocalIPAddress()
+        {
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                return endPoint.Address.ToString();
+            }
         }
     }
 }
