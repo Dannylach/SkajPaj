@@ -15,12 +15,13 @@ namespace SkajPaj
         private MemoryStream memoryStream;
         private byte[] buffer;
         private int packetNumber = 0;
+        public ConnectionManager connectionManager;
 
         public void StartRecording(ConnectionManager connectionManager, string userName)
         {
+            this.connectionManager = connectionManager;
             sourceStream = new WaveIn();
             var devicenum = 0;
-
             for (var i = 0; i < NAudio.Wave.WaveIn.DeviceCount; i++)
             {
                 if (NAudio.Wave.WaveIn.GetCapabilities(i).ProductName.Contains("icrophone"))
@@ -71,7 +72,7 @@ namespace SkajPaj
         public void PlayMessage(byte[] message)
         {
             WaveOut waveOut = new WaveOut();
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[message.Length];
 
             IWaveProvider provider = new RawSourceWaveStream(
                 new MemoryStream(bytes), new WaveFormat());

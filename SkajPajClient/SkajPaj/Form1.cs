@@ -16,21 +16,20 @@ namespace SkajPaj
 {
     public partial class Form1 : Form
     {
-        private readonly string path = Application.StartupPath + "\\buffer.wav";
         private readonly AudioManager audioManager = new AudioManager();
         private readonly ConnectionManager connectionManager = new ConnectionManager();
-        private readonly DataPacket dataPacket = new DataPacket();
         private string userName = "Daniel";
 
         public Form1()
         {
             InitializeComponent();
-            connectionManager.Initialize(userName);
+            connectionManager.Initialize(userName, audioManager);
         }
 
         private void RecordBtn_Click(object sender, EventArgs e)
         {
             audioManager.StartRecording(connectionManager, userName);
+            var ca = audioManager.connectionManager;
         }
 
         private void button2_Click(object sender, EventArgs e)

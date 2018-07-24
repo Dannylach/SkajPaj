@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using NAudio.Wave;
+using System.Windows;
 
 namespace SkajPaj
 {
@@ -25,25 +20,21 @@ namespace SkajPaj
         private bool calling = true;
         private byte[] dataStream = new byte[1024];
 
-        public AudioManager AudioManager;
-
-        public void Initialize(string userLogin, AudioManager audioManager)
+        public void Initialize(string userLogin)
         {
             try
             {
-                AudioManager = audioManager;
                 clientName = userLogin;
                 serverIpEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.33"), port);
                 udpClient = new UdpClient();
                 serverEndPoint = (EndPoint)serverIpEndPoint;
-                
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Connection Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        
+
         public void BeginCall(string ipToCall)
         {
             try
@@ -61,7 +52,6 @@ namespace SkajPaj
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Connection Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -75,12 +65,11 @@ namespace SkajPaj
                 ser.WriteObject(memoryStream, dataPacket);
                 var dataToSend = memoryStream.ToArray();
                 memoryStream.Close();
-                
+
                 udpClient.BeginSend(dataToSend, dataToSend.Length, serverIpEndPoint, null, null);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Send Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -107,7 +96,7 @@ namespace SkajPaj
                         var receivedResults = await udpClient.ReceiveAsync();
                         var receivedByte = receivedResults.Buffer;
                         ReceivedMessage(receivedByte);
-                        
+
                     }
                 }
             });
@@ -124,12 +113,14 @@ namespace SkajPaj
             MessageBox.Show("Receive Data: " + dataPacket.ToString());
             if (receivedString.Contains("HELLO"))
                 HelloResponse(receivedString);
-            else if (receivedString.Contains("BYE"))
+            if (receivedString.Contains("BYE"))
             {
                 calling = false;
                 Exit();
             }
-            else AudioManager.PlayMessage(dataPacket.Message);
+            else
+            {
+            }
         }
 
         void HelloResponse(string message)
@@ -159,11 +150,10 @@ namespace SkajPaj
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Closing Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private static string GetLocalIPAddress()
+        public static string GetLocalIPAddress()
         {
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {
