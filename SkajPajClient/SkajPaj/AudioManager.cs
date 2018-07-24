@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,10 +12,11 @@ namespace SkajPaj
     {
         private WaveIn sourceStream;
         private WaveFileWriter waveWriter;
-        private WaveFileWriter waveWriter2;
-        //private DataPacket dataPacket;
+        private MemoryStream memoryStream;
+        private byte[] buffer;
+        private int packetNumber = 0;
 
-        public void StartRecording(string path, DataPacket packet)
+        public void StartRecording(ConnectionManager connectionManager, string userName)
         {
             sourceStream = new WaveIn();
             var devicenum = 0;
@@ -27,25 +29,65 @@ namespace SkajPaj
             sourceStream.DeviceNumber = devicenum;
             sourceStream.WaveFormat = new WaveFormat(22000, WaveIn.GetCapabilities(devicenum).Channels);
             sourceStream.DataAvailable += sourceStream_DataAvailable;
-            //TODO Send to stream
-            //waveWriter = new WaveFileWriter(dataPacket.Message, sourceStream.WaveFormat);
+            
+            memoryStream = new MemoryStream();
+            waveWriter = new WaveFileWriter(memoryStream, sourceStream.WaveFormat);
 
-            waveWriter = new WaveFileWriter(path, sourceStream.WaveFormat);
-            //waveWriter2 = new
+            var dataPacket = new DataPacket(buffer, userName, packetNumber);
+
+            connectionManager.SendMessage(dataPacket);
 
             sourceStream.StartRecording();
         }
 
+        public static byte[] ReadFully(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
+        }
+
         public void StopRecording()
         {
-            //sourceStream.StopRecording();
+            packetNumber = 0;
+            sourceStream.StopRecording();
+            var data = ReadFully(memoryStream);
+            memoryStream.Close();
         }
+
+        public void EndCall()
+        {
+            StopRecording();
+            waveWriter.Close();
+        }
+
+        public void PlayMessage(byte[] message)
+        {
+            WaveOut waveOut = new WaveOut();
+            byte[] bytes = new byte[1024];
+
+            IWaveProvider provider = new RawSourceWaveStream(
+                new MemoryStream(bytes), new WaveFormat());
+
+            waveOut.Init(provider);
+            waveOut.Play();
+        }
+
 
         private void sourceStream_DataAvailable(object sender, WaveInEventArgs e)
         {
             if (waveWriter == null) return;
             waveWriter.Write(e.Buffer, 0, e.BytesRecorded);
             waveWriter.Flush();
+            buffer = e.Buffer;
+            packetNumber++;
         }
     }
 }

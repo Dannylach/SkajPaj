@@ -8,27 +8,27 @@ namespace SkajPaj
 {
     public class DataPacket
     {
+        public int PacketNumber { get; set; }
         public string SenderName { get; set; }
         public byte[] Message { get; set; }
 
         public DataPacket()
         {
-            SenderName = null;
+            PacketNumber = 0;
             Message = null;
+            SenderName = null;
         }
 
-        public DataPacket(byte[] dataStream)
+        public DataPacket(byte[] dataStream, string userLogin, int packetNumber)
         {
-            var nameLength = BitConverter.ToInt32(dataStream, 4);
-            var msgLength = BitConverter.ToInt32(dataStream, 8);
-            SenderName = nameLength > 0 ? Encoding.UTF8.GetString(dataStream, 12, nameLength) : null;
-            Message = msgLength > 0 ? Encoding.UTF8.GetBytes(Encoding.UTF8.GetString(dataStream, 12 + nameLength, msgLength)) : null;
+            PacketNumber = PacketNumber;
+            SenderName = userLogin;
+            Message = dataStream;
         }
 
         public byte[] PackMessage()
         {
             var dataStream = new List<byte[]>();
-
             dataStream.Add(SenderName != null ? BitConverter.GetBytes(SenderName.Length) : BitConverter.GetBytes(0));
             dataStream.Add(Message != null ? BitConverter.GetBytes(Message.Length) : BitConverter.GetBytes(0));
             if (SenderName != null) dataStream.Add(Encoding.UTF8.GetBytes(SenderName));
