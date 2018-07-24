@@ -81,4 +81,10 @@ namespace SkajPajClientWPF.Objects
         public string message;
         public bool change_password;
     }
+
+    public class EditIPAddressRequest
+    {
+        public string message;
+        public bool edit_address_ip;
+    }
 }

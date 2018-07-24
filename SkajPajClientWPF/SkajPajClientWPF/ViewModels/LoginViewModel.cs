@@ -49,13 +49,16 @@ namespace SkajPajClientWPF.ViewModels
             {
                 if (!LoginModel.RestWebApiRequest.SignIn(LoginModel.Login, LoginModel.Password))
                 {
-                    MessageBox.Show("Nieudało się zalogować. Login lub hasło jest niepoprawne.");
+                    MessageBox.Show("Nieudało się zalogować. Prawdopodobnie login lub hasło jest niepoprawne.");
                 }
                 else
                 {
-                    MainWindow mainWindow = new MainWindow(LoginModel.Login, LoginModel.Password);
-                    mainWindow.Show();
-                    CloseWindow();
+                    if (LoginModel.RestWebApiRequest.EditAdressIP(LoginModel.Login, LoginModel.Password))
+                    {
+                        MainWindow mainWindow = new MainWindow(LoginModel.Login, LoginModel.Password);
+                        mainWindow.Show();
+                        CloseWindow();
+                    }
                 }
             }
         }
