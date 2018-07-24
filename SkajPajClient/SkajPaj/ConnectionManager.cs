@@ -33,20 +33,7 @@ namespace SkajPaj
                 dataPacket.Message = null;
                 dataPacket.ChatDataIdentifier = DataIdentifier.LogIn;
 
-<<<<<<< HEAD
-                clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                //TODO Change IP to send not on local machine
-                var serverIp = IPAddress.Parse("192.168.1.14");
-                var server = new IPEndPoint(IPAddress.Any, 0);
 
-                serverEndPoint = (EndPoint)server;
-                //var data = dataPacket.PackMessage();
-
-                //clientSocket.BeginSendTo(data, 0, data.Length, SocketFlags.None, serverEndPoint, SendData, null);
-                dataStream = new byte[1024];
-                clientSocket.Bind(server);
-                clientSocket.BeginReceiveFrom(dataStream, 0, dataStream.Length, SocketFlags.None, ref serverEndPoint, ReceiveData, null);
-=======
                 //TODO Change IP to send to ip from serwer
                 var serverIp = IPAddress.Parse("192.168.1.33");
                 serverIpEndPoint = new IPEndPoint(serverIp, 3000);
@@ -54,7 +41,6 @@ namespace SkajPaj
 
                 serverEndPoint = (EndPoint)serverIpEndPoint;
                 
->>>>>>> 906ce694bdd116f37dd200f1092e88bf0337da88
             }
             catch (Exception ex)
             {
