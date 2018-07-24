@@ -26,7 +26,10 @@ namespace SkajPajClientWPF.Audio
         private string clientName;
         private EndPoint friendEndPoint;
 
-
+        /// <summary>
+        /// Initializes all vital instances.
+        /// </summary>
+        /// <param name="userLogin">The user login.</param>
         public void Initialize(string userLogin)
         {
             try
@@ -56,28 +59,61 @@ namespace SkajPajClientWPF.Audio
             }
         }
 
+
+        /// <summary>
+        /// Initializes UDP listening async task
+        /// </summary>
+        public void ListenForMessage()
+        {
+            try
+            {
+                UDPListener();
+            }
+            catch (Exception e)
+            {
+                //TODO Signal error
+            }
+        }
+
+        /// <summary>
+        /// Begins call to specified IP address
+        /// </summary>
+        /// <param name="ip">The ip.</param>
         public void StartCall(string ip)
         {
 
             ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 40015);
             udpClient.Send(new byte[1], 1, ipEndPoint);
-            recieve_thread = new Thread(recv);
+            recieve_thread = new Thread(AudioReceive);
             recieve_thread.Start();
 
             waveIn.StartRecording();
         }
 
+        /// <summary>
+        /// Handles the DataAvailable event of the waveIn control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="WaveInEventArgs"/> instance containing the event data.</param>
         void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
             udpClient.Send(e.Buffer, e.Buffer.Length, ipEndPoint);
         }
 
+        /// <summary>
+        /// Handles the RecordingStopped event of the waveIn control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         void waveIn_RecordingStopped(object sender, EventArgs e)
         {
             waveIn.Dispose();
             waveIn = null;
         }
 
+        /// <summary>
+        /// Exits this instance.
+        /// </summary>
         void Exit()
         {
             if (waveIn == null) return;
@@ -89,7 +125,10 @@ namespace SkajPajClientWPF.Audio
             running = false;
         }
 
-        static void recv()
+        /// <summary>
+        /// Function responsible for listening for audio during call
+        /// </summary>
+        static void AudioReceive()
         {
             BufferedWaveProvider PlayBuffer = new BufferedWaveProvider(waveIn.WaveFormat);
             waveOut.Init(PlayBuffer);
@@ -102,6 +141,10 @@ namespace SkajPajClientWPF.Audio
             }
         }
 
+        /// <summary>
+        /// Begins the call by sending HELLO message with callers IP address.
+        /// </summary>
+        /// <param name="ipToCall">The ip to call.</param>
         public void BeginCall(string ipToCall)
         {
             try
@@ -123,6 +166,10 @@ namespace SkajPajClientWPF.Audio
             }
         }
 
+        /// <summary>
+        /// Function responsible for sending text messages to called user.
+        /// </summary>
+        /// <param name="dataPacket">The data packet.</param>
         public void SendMessage(DataPacket dataPacket)
         {
             try
@@ -136,20 +183,10 @@ namespace SkajPajClientWPF.Audio
                 //TODO Signal error
             }
         }
-
-
-        public void ListenForMessage()
-        {
-            try
-            {
-                UDPListener();
-            }
-            catch (Exception e)
-            {
-                //TODO Signal error
-            }
-        }
-
+        
+        /// <summary>
+        /// Creates async task listening for any UDP traffic at specified port
+        /// </summary>
         private void UDPListener()
         {
             Task.Run(async () =>
@@ -167,6 +204,11 @@ namespace SkajPajClientWPF.Audio
             });
         }
 
+        /// <summary>
+        /// Processes message sent from network.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         private string ReceivedMessage(byte[] message)
         {
             DataPacket dataPacket = new DataPacket();
@@ -183,12 +225,21 @@ namespace SkajPajClientWPF.Audio
             return null;
         }
 
+        /// <summary>
+        /// Gets callers IP address from HELLO message
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         string HelloResponse(string message)
         {
             return message.Remove(0, 6);
         }
 
-        private static string GetLocalIPAddress()
+        /// <summary>
+        /// Gets the ip address of the machine in local network.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetLocalIPAddress()
         {
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {

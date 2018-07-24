@@ -10,7 +10,7 @@ namespace SkajPajClientWPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        public AudioManager callingManager = new AudioManager();
+        public AudioManager AudioManager = new AudioManager();
 
         public MainViewModel(string login, string password)
         {
@@ -62,7 +62,7 @@ namespace SkajPajClientWPF.ViewModels
         {
             string avatar = "TO DO";
             string address_ip = "TO DO";
-            string call_id = "TO DO"; // TO DO CREATE CALL
+            string call_id = "TO DO"; // TODO CREATE CALL
 
             CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar,  login, address_ip, call_id);
             loginnWindow.ShowDialog();

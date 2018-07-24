@@ -14,6 +14,9 @@ namespace SkajPajClientWPF.Audio
         public string SenderName { get; set; }
         public byte[] Message { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataPacket"/> class.
+        /// </summary>
         public DataPacket()
         {
             PacketNumber = 0;
@@ -21,6 +24,12 @@ namespace SkajPajClientWPF.Audio
             SenderName = null;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataPacket"/> class.
+        /// </summary>
+        /// <param name="dataStream">The data stream.</param>
+        /// <param name="userLogin">The user login.</param>
+        /// <param name="packetNumber">The packet number.</param>
         public DataPacket(byte[] dataStream, string userLogin, int packetNumber)
         {
             PacketNumber = PacketNumber;
@@ -28,6 +37,10 @@ namespace SkajPajClientWPF.Audio
             Message = dataStream;
         }
 
+        /// <summary>
+        /// Packs the message to JSON .
+        /// </summary>
+        /// <returns></returns>
         public byte[] PackMessage()
         {
 
@@ -40,6 +53,11 @@ namespace SkajPajClientWPF.Audio
             return dataToSend;
         }
 
+        /// <summary>
+        /// Unpacks the message from JSON.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         public DataPacket UnpackMessage(byte[] message)
         {
             MemoryStream memoryStream = new MemoryStream(message);
