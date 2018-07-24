@@ -35,7 +35,7 @@ namespace SkajPaj
 
 
                 //TODO Change IP to send to ip from serwer
-                var serverIp = IPAddress.Parse("192.168.1.33");
+                var serverIp = IPAddress.Parse("192.168.1.14");
                 serverIpEndPoint = new IPEndPoint(serverIp, 3000);
                 udpClient = new UdpClient();
 
@@ -74,10 +74,9 @@ namespace SkajPaj
             try
             {
                 dataPacket.SenderName = clientName;
-                var data = new byte[4];
-                data[0] = 1;
-                data[2] = 0;
-                data[3] = 1;
+                var message = "HELLO";
+                var data = new byte[1028];
+                data = Encoding.ASCII.GetBytes(message);
 
                 Connect(dataPacket);
                 
