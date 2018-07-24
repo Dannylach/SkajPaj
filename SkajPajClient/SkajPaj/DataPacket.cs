@@ -49,5 +49,14 @@ namespace SkajPaj
 
             return dataStream.SelectMany(a => a).ToArray();
         }
+
+        public override string ToString()
+        {
+            string stringToReturn = null;
+            stringToReturn = ChatDataIdentifier.ToString() + "\n";
+            stringToReturn = SenderName + "\n";
+            stringToReturn = Encoding.ASCII.GetString(Message);
+            return stringToReturn;
+        }
     }
 }

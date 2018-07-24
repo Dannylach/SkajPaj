@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,29 +17,25 @@ namespace SkajPaj
     class ConnectionManager
     {
         //TODO Sending and receiving data out of local network
-        private bool calling = true;
         private Socket clientSocket;
         private UdpClient udpClient;
-        private string clientName;
         private EndPoint serverEndPoint;
         private IPEndPoint serverIpEndPoint;
+        private string clientName;
+        private int port = 3000;
+        private bool calling = true;
         private byte[] dataStream = new byte[1024];
 
-        public void Connect(DataPacket dataPacket)
+        public void Connect()
         {
             try
             {
                 //TODO Change naming for login
                 clientName = "Testowy";
-                dataPacket = new DataPacket();
-                dataPacket.SenderName = clientName;
-                dataPacket.Message = null;
-                dataPacket.ChatDataIdentifier = DataIdentifier.LogIn;
-
 
                 //TODO Change IP to send to ip from serwer
-                var serverIp = IPAddress.Parse("192.168.1.14");
-                serverIpEndPoint = new IPEndPoint(serverIp, 3000);
+                var serverIp = IPAddress.Parse("192.168.1.33");
+                serverIpEndPoint = new IPEndPoint(serverIp, port);
                 udpClient = new UdpClient();
 
                 serverEndPoint = (EndPoint)serverIpEndPoint;
@@ -75,15 +72,20 @@ namespace SkajPaj
         {
             try
             {
+                Connect();
                 dataPacket.SenderName = clientName;
                 var message = "HELLO";
-                var data = new byte[1028];
-                data = Encoding.ASCII.GetBytes(message);
+                dataPacket.Message = Encoding.ASCII.GetBytes(message);
 
-                Connect(dataPacket);
+                MemoryStream memoryStream = new MemoryStream();
+
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(DataPacket));
+                ser.WriteObject(memoryStream, dataPacket);
+                byte[] dataToSend = memoryStream.ToArray();
+                memoryStream.Close();
+
                 
-                udpClient.BeginSend(data, data.Length, serverIpEndPoint, null, null);
-                dataStream = new byte[1024];
+                udpClient.BeginSend(dataToSend, dataToSend.Length, serverIpEndPoint, null, null);
             }
             catch (Exception ex)
             {
@@ -91,9 +93,9 @@ namespace SkajPaj
             }
         }
 
-        public void ReceiveMessage()
+        public void ListenForMessage()
         {
-            Connect(null);
+            Connect();
 
             try
             {
@@ -109,56 +111,35 @@ namespace SkajPaj
         {
             Task.Run(async () =>
             {
-                using (var udpClient = new UdpClient(3000))
+                using (var udpClient = new UdpClient(port))
                 {
                     calling = true;
                     while (calling)
                     {
-                        //IPEndPoint object will allow us to read datagrams sent from any source.
                         var receivedResults = await udpClient.ReceiveAsync();
-                        var s = receivedResults.Buffer;
-                        string str = null;
-                        foreach (var sa in s)
-                        {
-                            str = String.Concat(str, sa.ToString());
-                        }
-
-                        var listenerString = Encoding.ASCII.GetString(s);
-                        MessageBox.Show("Receive Data: " + listenerString + "\t" + str);
-                        if (listenerString.Equals("BYE")) calling = false;
+                        var receivedByte = receivedResults.Buffer;
+                        ReceivedMessage(receivedByte);
+                        
                     }
                 }
             });
         }
 
-
-        //TODO Receive by UpdClient
-        private void ReceiveData(IAsyncResult ar)
+        private void ReceivedMessage(byte[] message)
         {
-            try
-            {
-                clientSocket.EndReceive(ar);
-                DataPacket receivedData = new DataPacket(this.dataStream);
+            DataPacket dataPacket = new DataPacket();
+            MemoryStream memoryStream = new MemoryStream(message);
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(dataPacket.GetType());
+            dataPacket = ser.ReadObject(memoryStream) as DataPacket;
+            memoryStream.Close();
+            var receivedString = Encoding.ASCII.GetString(dataPacket.Message);
+            MessageBox.Show("Receive Data: " + dataPacket.ToString());
+            if (receivedString.Contains("HELLO")) calling = true;/*BeginConnection(receivedString)*/;
+            if (receivedString.Contains("BYE")) calling = false;
+            if (receivedString.Contains("BYE")) calling = false;
 
-                if (receivedData.Message != null)
-                    SaveMessage(receivedData.Message);
-                
-                dataStream = new byte[1024];
-
-                clientSocket.BeginReceiveFrom(this.dataStream, 0, this.dataStream.Length, SocketFlags.None,
-                    ref serverEndPoint, new AsyncCallback(this.ReceiveData), null);
-                MessageBox.Show("Receive Data: " + dataStream.ToString());
-            }
-            catch (ObjectDisposedException)
-            {
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Receive Data: " + ex.Message, "UDP Client", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-            }
         }
-        
+
         public void Exit()
         {
             try
