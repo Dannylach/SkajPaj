@@ -61,7 +61,7 @@ namespace SkajPajClientWPF.ViewModels
         private void CallToLogin(string login)
         {
             string avatar = "TO DO";
-            string address_ip = AudioManager.GetLocalIPAddress();
+            string address_ip = "TO DO";
             string call_id = "TO DO"; // TODO CREATE CALL
 
             CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar,  login, address_ip, call_id);
