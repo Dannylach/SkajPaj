@@ -218,5 +218,23 @@ namespace SkajPajClientWPF
 
             return false;
         }
+
+        public bool EditAdressIP(string login, string password) {
+            string request = SERVER_DOMAIN + EDIT_ADDRESS_IP + "login=" + login + "&password=" + password + "&address_ip=" + new IPHelpfulFunktions().GetLocalIPAddress();
+            string json = makeRequest(request);
+
+            try
+            {
+                EditIPAddressRequest editIPAddressRequest = JsonConvert.DeserializeObject<EditIPAddressRequest>(json);
+
+                return editIPAddressRequest.edit_address_ip;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return false;
+        }
     }
 }

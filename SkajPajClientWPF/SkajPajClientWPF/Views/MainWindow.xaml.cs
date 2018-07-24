@@ -37,11 +37,5 @@ namespace SkajPajClientWPF.Views
         {
             Close();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //TODO Change username
-            mvm.callingManager.BeginCall(IPAddress.Parse("127.0.0.1"), "Local");
-        }
     }
 }
