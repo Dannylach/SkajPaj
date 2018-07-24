@@ -113,6 +113,16 @@ namespace SkajPajClientWPF.ViewModels
             }
         }
 
+        public ICommand CallCommand { get { return new RelayCommand(CallButton); } }
+
+        private void CallButton()
+        {
+            if (MainModel.UserData.Login != MainModel.CallLogin)
+            {
+                CallToLogin(MainModel.CallLogin);
+            }
+        }
+
         public ICommand ChangePasswordCommand { get { return new RelayCommand(ChangePassword); } }
 
         private void ChangePassword()

@@ -114,10 +114,6 @@ namespace SkajPajClientWPF
                 if (listOfFriendsRequest.friends_number>0)
                 {
                     ObservableCollection<Friend> result = new ObservableCollection<Friend>();
-                    /*foreach(FriendsRecord f in listOfFriendsRequest.records)
-                    {
-                        result.Add(new User(f.login, f.avatar, f.address_ip));
-                    }*/
                     for(int i=listOfFriendsRequest.records.Count-1; i>=0; i--)
                     {
                         result.Add(new Friend(listOfFriendsRequest.records[i].login, listOfFriendsRequest.records[i].avatar, listOfFriendsRequest.records[i].address_ip));
