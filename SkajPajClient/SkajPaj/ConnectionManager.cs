@@ -26,18 +26,13 @@ namespace SkajPaj
         private bool calling = true;
         private byte[] dataStream = new byte[1024];
 
-        public void Connect()
+        public void Initialize(string userLogin)
         {
             try
             {
-                //TODO Change naming for login
-                clientName = "Testowy";
-
-                //TODO Change IP to send to ip from serwer
-                var serverIp = IPAddress.Parse("192.168.1.33");
-                serverIpEndPoint = new IPEndPoint(serverIp, port);
+                clientName = userLogin;
+                serverIpEndPoint = new IPEndPoint(IPAddress.Any, port);
                 udpClient = new UdpClient();
-
                 serverEndPoint = (EndPoint)serverIpEndPoint;
                 
             }
@@ -72,7 +67,6 @@ namespace SkajPaj
         {
             try
             {
-                Connect();
                 dataPacket.SenderName = clientName;
                 var message = "HELLO";
                 dataPacket.Message = Encoding.ASCII.GetBytes(message);
@@ -95,7 +89,7 @@ namespace SkajPaj
 
         public void ListenForMessage()
         {
-            Connect();
+            //Connect();
 
             try
             {
@@ -134,10 +128,47 @@ namespace SkajPaj
             memoryStream.Close();
             var receivedString = Encoding.ASCII.GetString(dataPacket.Message);
             MessageBox.Show("Receive Data: " + dataPacket.ToString());
-            if (receivedString.Contains("HELLO")) calling = true;/*BeginConnection(receivedString)*/;
+            if (receivedString.Contains("HELLO")) HelloResponse(receivedString);
             if (receivedString.Contains("BYE")) calling = false;
             if (receivedString.Contains("BYE")) calling = false;
+        }
 
+        void HelloResponse(string message)
+        {
+            var ipSayingHello = message.Remove(0, 6);
+            var serverIp = IPAddress.Parse(ipSayingHello);
+            serverIpEndPoint = new IPEndPoint(serverIp, port);
+            udpClient = new UdpClient();
+            serverEndPoint = (EndPoint)serverIpEndPoint;
+        }
+
+        public void BeginCall(string ipToCall)
+        {
+            try
+            {
+                Initialize("Daniel");
+                var serverIp = IPAddress.Parse(ipToCall);
+                serverIpEndPoint = new IPEndPoint(serverIp, port);
+                serverEndPoint = (EndPoint)serverIpEndPoint;
+
+                DataPacket dataPacket = new DataPacket();
+                dataPacket.SenderName = clientName;
+                var message = "HELLO " + GetLocalIPAddress();
+                dataPacket.Message = Encoding.ASCII.GetBytes(message);
+
+                MemoryStream memoryStream = new MemoryStream();
+
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(DataPacket));
+                ser.WriteObject(memoryStream, dataPacket);
+                byte[] dataToSend = memoryStream.ToArray();
+                memoryStream.Close();
+
+                SendMessage(dataPacket);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Connection Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public void Exit()
@@ -148,7 +179,6 @@ namespace SkajPaj
                 {
                     DataPacket sendData = new DataPacket
                     {
-                        ChatDataIdentifier = DataIdentifier.LogOut,
                         SenderName = clientName,
                         Message = null
                     };
@@ -162,6 +192,15 @@ namespace SkajPaj
             catch (Exception ex)
             {
                 MessageBox.Show("Closing Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        public static string GetLocalIPAddress()
+        {
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                return endPoint.Address.ToString();
             }
         }
     }

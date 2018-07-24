@@ -34,7 +34,7 @@ namespace SkajPaj
         private void button2_Click(object sender, EventArgs e)
         {
             audioManager.StopRecording();
-            connectionManager.SendMessage(dataPacket);
+            connectionManager.BeginCall("192.168.1.33"); ;
         }
 
         private void ExitBtn_Click(object sender, EventArgs e)

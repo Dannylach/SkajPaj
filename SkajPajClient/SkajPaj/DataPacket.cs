@@ -6,31 +6,19 @@ using System.Threading.Tasks;
 
 namespace SkajPaj
 {
-    public enum DataIdentifier
-    {
-        Message,
-        LogIn,
-        LogOut,
-        Null
-    }
-
     public class DataPacket
     {
-        public DataIdentifier ChatDataIdentifier { get; set; }
         public string SenderName { get; set; }
         public byte[] Message { get; set; }
 
         public DataPacket()
         {
-            ChatDataIdentifier = DataIdentifier.Null;
-            Message = null;
             SenderName = null;
+            Message = null;
         }
 
         public DataPacket(byte[] dataStream)
         {
-            ChatDataIdentifier = (DataIdentifier)BitConverter.ToInt32(dataStream, 0);
-
             var nameLength = BitConverter.ToInt32(dataStream, 4);
             var msgLength = BitConverter.ToInt32(dataStream, 8);
             SenderName = nameLength > 0 ? Encoding.UTF8.GetString(dataStream, 12, nameLength) : null;
@@ -41,7 +29,6 @@ namespace SkajPaj
         {
             var dataStream = new List<byte[]>();
 
-            dataStream.Add(BitConverter.GetBytes((int)ChatDataIdentifier));
             dataStream.Add(SenderName != null ? BitConverter.GetBytes(SenderName.Length) : BitConverter.GetBytes(0));
             dataStream.Add(Message != null ? BitConverter.GetBytes(Message.Length) : BitConverter.GetBytes(0));
             if (SenderName != null) dataStream.Add(Encoding.UTF8.GetBytes(SenderName));
@@ -53,9 +40,8 @@ namespace SkajPaj
         public override string ToString()
         {
             string stringToReturn = null;
-            stringToReturn = ChatDataIdentifier.ToString() + "\n";
-            stringToReturn = SenderName + "\n";
-            stringToReturn = Encoding.ASCII.GetString(Message);
+            stringToReturn += SenderName + "\n";
+            stringToReturn += Encoding.ASCII.GetString(Message);
             return stringToReturn;
         }
     }
