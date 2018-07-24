@@ -26,21 +26,22 @@ namespace SkajPaj
             {
                 //TODO Change naming
                 clientName = "Testowy";
-
+                dataPacket = new DataPacket();
                 dataPacket.SenderName = clientName;
                 dataPacket.Message = null;
                 dataPacket.ChatDataIdentifier = DataIdentifier.LogIn;
 
                 clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 //TODO Change IP to send not on local machine
-                var serverIp = IPAddress.Parse("127.0.0.1");
-                var server = new IPEndPoint(serverIp, 30000);
+                var serverIp = IPAddress.Parse("192.168.1.14");
+                var server = new IPEndPoint(IPAddress.Any, 0);
 
                 serverEndPoint = (EndPoint)server;
-                var data = dataPacket.PackMessage();
+                //var data = dataPacket.PackMessage();
 
-                clientSocket.BeginSendTo(data, 0, data.Length, SocketFlags.None, serverEndPoint, SendData, null);
+                //clientSocket.BeginSendTo(data, 0, data.Length, SocketFlags.None, serverEndPoint, SendData, null);
                 dataStream = new byte[1024];
+                clientSocket.Bind(server);
                 clientSocket.BeginReceiveFrom(dataStream, 0, dataStream.Length, SocketFlags.None, ref serverEndPoint, ReceiveData, null);
             }
             catch (Exception ex)
@@ -112,6 +113,7 @@ namespace SkajPaj
 
                 clientSocket.BeginReceiveFrom(this.dataStream, 0, this.dataStream.Length, SocketFlags.None,
                     ref serverEndPoint, new AsyncCallback(this.ReceiveData), null);
+                MessageBox.Show("Receive Data: " + dataStream.ToString());
             }
             catch (ObjectDisposedException)
             {

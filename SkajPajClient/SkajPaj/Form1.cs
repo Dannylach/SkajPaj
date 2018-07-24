@@ -41,5 +41,10 @@ namespace SkajPaj
         {
             connectionManager.Exit();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            connectionManager.Connect(null);
+        }
     }
 }
