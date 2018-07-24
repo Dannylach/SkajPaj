@@ -33,7 +33,8 @@ namespace SkajPajClientWPF.ViewModels
             MainModel.FriendList = MainModel.RestWebApiRequest.ListOfFriends(MainModel.UserData.Login, MainModel.UserData.Password);
             foreach (Friend f in MainModel.FriendList)
             {
-                f.ClickDelete += new EventHandler<FriendEventArgs>(DeleteFriend);
+                f.ClickDelete += new EventHandler<FriendEventArgs>(CallToFriend);
+                f.ClickCallToFriend += new EventHandler<FriendEventArgs>(CallToFriend);
             }
         }
 
@@ -50,6 +51,21 @@ namespace SkajPajClientWPF.ViewModels
         {
             MainModel.RestWebApiRequest.DeleteFriend(MainModel.UserData.Login, MainModel.UserData.Password, f.Login);
             UpdateFriendList();
+        }
+
+        private void CallToFriend(object sender, FriendEventArgs f)
+        {
+            CallToLogin(f.Login);
+        }
+
+        private void CallToLogin(string login)
+        {
+            string avatar = "TO DO";
+            string address_ip = "TO DO";
+            string call_id = "TO DO"; // TO DO CREATE CALL
+
+            CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar,  login, address_ip, call_id);
+            loginnWindow.ShowDialog();
         }
 
         public MainViewModel()

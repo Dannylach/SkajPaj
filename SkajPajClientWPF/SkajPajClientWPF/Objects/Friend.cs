@@ -36,7 +36,19 @@ namespace SkajPajClientWPF.Objects
 
         private void CallFriend()
         {
-            MessageBox.Show("Zwonisz do" + Login + " na ip: " + Address_ip);
+            //MessageBox.Show("Zwonisz do" + Login + " na ip: " + Address_ip);
+            OnClickCallToFriend(new FriendEventArgs(Login));
+        }
+
+        public event EventHandler<FriendEventArgs> ClickCallToFriend;
+
+        protected virtual void OnClickCallToFriend(FriendEventArgs e)
+        {
+            EventHandler<FriendEventArgs> handler = ClickCallToFriend;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 
@@ -48,4 +60,5 @@ namespace SkajPajClientWPF.Objects
         }
         public string Login { get; set; }    
     }
+
 }

@@ -27,6 +27,7 @@ namespace SkajPajClientWPF.Objects
                 return EndDate.Subtract(StartDate);
             }
         }
+
         public string StartDateString{
             get
             {

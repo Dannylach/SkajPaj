@@ -74,12 +74,13 @@
                         <StackPanel>
                             <TextBlock Text="{Binding IsReceived}"/>
                             <TextBlock Text="{Binding StartDateString}"/>
-                            <TextBlock Text="{Binding Time}"/> 
+                            <TextBlock Text="{Binding Time}"/>
                         </StackPanel>
-                        <Button Content="Zadzwoń" Background="LawnGreen" Margin="15,15,0,15" Width="70"  Command="{Binding CallFriendCommand}/>
+                        <Button Content="Zadzwoń" Background="LawnGreen" Margin="15,15,0,15" Width="70"  Command="{Binding CallFriendCommand}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
     </Grid>
 </Window>
