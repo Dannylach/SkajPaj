@@ -24,17 +24,15 @@ namespace SkajPaj
         private int port = 3000;
         private bool calling = true;
         private byte[] dataStream = new byte[1024];
+        private AudioManager audioManager;
 
-        public AudioManager AudioManager;
-
-        public void Initialize(string userLogin, AudioManager audioManager)
+        public void Initialize(string userLogin)
         {
             try
             {
-                AudioManager = audioManager;
                 clientName = userLogin;
                 serverIpEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.33"), port);
-                udpClient = new UdpClient();
+                udpClient = new UdpClient(port);
                 serverEndPoint = (EndPoint)serverIpEndPoint;
                 
             }
@@ -69,12 +67,7 @@ namespace SkajPaj
         {
             try
             {
-                var memoryStream = new MemoryStream();
-                var ser = new DataContractJsonSerializer(typeof(DataPacket));
-
-                ser.WriteObject(memoryStream, dataPacket);
-                var dataToSend = memoryStream.ToArray();
-                memoryStream.Close();
+                var dataToSend = dataPacket.PackMessage();
                 
                 udpClient.BeginSend(dataToSend, dataToSend.Length, serverIpEndPoint, null, null);
             }
@@ -113,15 +106,13 @@ namespace SkajPaj
             });
         }
 
-        private void ReceivedMessage(byte[] message)
+        private string ReceivedMessage(byte[] message)
         {
             DataPacket dataPacket = new DataPacket();
-            MemoryStream memoryStream = new MemoryStream(message);
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(dataPacket.GetType());
-            dataPacket = ser.ReadObject(memoryStream) as DataPacket;
-            memoryStream.Close();
+            dataPacket = dataPacket.UnpackMessage(message);
             var receivedString = Encoding.ASCII.GetString(dataPacket.Message);
             MessageBox.Show("Receive Data: " + dataPacket.ToString());
+
             if (receivedString.Contains("HELLO"))
                 HelloResponse(receivedString);
             else if (receivedString.Contains("BYE"))
@@ -129,15 +120,13 @@ namespace SkajPaj
                 calling = false;
                 Exit();
             }
-            else AudioManager.PlayMessage(dataPacket.Message);
+
+            return null;
         }
 
-        void HelloResponse(string message)
+        string HelloResponse(string message)
         {
-            var ipSayingHello = message.Remove(0, 6);
-            var serverIp = IPAddress.Parse(ipSayingHello);
-            serverIpEndPoint = new IPEndPoint(serverIp, port);
-            serverEndPoint = (EndPoint)serverIpEndPoint;
+            return message.Remove(0, 6);
         }
 
         public void Exit()

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,13 +30,23 @@ namespace SkajPaj
 
         public byte[] PackMessage()
         {
-            var dataStream = new List<byte[]>();
-            dataStream.Add(SenderName != null ? BitConverter.GetBytes(SenderName.Length) : BitConverter.GetBytes(0));
-            dataStream.Add(Message != null ? BitConverter.GetBytes(Message.Length) : BitConverter.GetBytes(0));
-            if (SenderName != null) dataStream.Add(Encoding.UTF8.GetBytes(SenderName));
-            if (Message != null) dataStream.Add(Message);
 
-            return dataStream.SelectMany(a => a).ToArray();
+            var memoryStream = new MemoryStream();
+            var ser = new DataContractJsonSerializer(typeof(DataPacket));
+
+            ser.WriteObject(memoryStream, this);
+            var dataToSend = memoryStream.ToArray();
+            memoryStream.Close();
+            return dataToSend;
+        }
+
+        public DataPacket UnpackMessage(byte[] message)
+        {
+            MemoryStream memoryStream = new MemoryStream(message);
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(this.GetType());
+            var dataUnpaked = ser.ReadObject(memoryStream) as DataPacket;
+            memoryStream.Close();
+            return dataUnpaked;
         }
 
         public override string ToString()

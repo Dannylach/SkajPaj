@@ -19,27 +19,26 @@ namespace SkajPaj
         private readonly AudioManager audioManager = new AudioManager();
         private readonly ConnectionManager connectionManager = new ConnectionManager();
         private string userName = "Daniel";
+        private string ip = "192.168.1.14";
 
         public Form1()
         {
             InitializeComponent();
-            connectionManager.Initialize(userName, audioManager);
+            connectionManager.Initialize(userName);
         }
 
         private void RecordBtn_Click(object sender, EventArgs e)
         {
-            audioManager.StartRecording(connectionManager, userName);
-            var ca = audioManager.connectionManager;
+            audioManager.StartCall(ip);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            connectionManager.BeginCall("192.168.1.33");
+            connectionManager.BeginCall(ip);
         }
 
         private void ExitBtn_Click(object sender, EventArgs e)
         {
-            audioManager.EndCall();
             connectionManager.Exit();
         }
 

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
 
@@ -10,85 +13,74 @@ namespace SkajPaj
 {
     public class AudioManager
     {
-        private WaveIn sourceStream;
-        private WaveFileWriter waveWriter;
+        static WaveIn waveIn;
+        static WaveOut waveOut;
+        static WaveFileWriter waveWriter;
+        static Thread recieve_thread;
+        static UdpClient udpc;
+        static IPEndPoint ipEndPoint;
         private MemoryStream memoryStream;
-        private byte[] buffer;
+        static byte[] incoming;
         private int packetNumber = 0;
-        public ConnectionManager connectionManager;
 
-        public void StartRecording(ConnectionManager connectionManager, string userName)
+        public void StartCall(string ip)
         {
-            this.connectionManager = connectionManager;
-            sourceStream = new WaveIn();
-            var devicenum = 0;
-            for (var i = 0; i < NAudio.Wave.WaveIn.DeviceCount; i++)
-            {
-                if (NAudio.Wave.WaveIn.GetCapabilities(i).ProductName.Contains("icrophone"))
-                    devicenum = i;
-            }
-            sourceStream.DeviceNumber = devicenum;
-            sourceStream.WaveFormat = new WaveFormat(22000, WaveIn.GetCapabilities(devicenum).Channels);
-            sourceStream.DataAvailable += sourceStream_DataAvailable;
-            
+            waveIn = new WaveIn();
+            waveIn.BufferMilliseconds = 100;
+            waveIn.NumberOfBuffers = 10;
+            waveOut = new WaveOut();
+
+            waveIn.DeviceNumber = 0;
+            waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
+
+            waveIn.WaveFormat = new WaveFormat(44200, 2);
+            waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStopped);
+
             memoryStream = new MemoryStream();
-            waveWriter = new WaveFileWriter(memoryStream, sourceStream.WaveFormat);
+            waveWriter = new WaveFileWriter(memoryStream, waveIn.WaveFormat);
 
-            var dataPacket = new DataPacket(buffer, userName, packetNumber);
+            udpc = new UdpClient(40015);
+            ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 40015);
 
-            connectionManager.SendMessage(dataPacket);
+            udpc.Send(new byte[1], 1, ipEndPoint);
+            recieve_thread = new Thread(recv);
+            recieve_thread.Start();
 
-            sourceStream.StartRecording();
+            waveIn.StartRecording();
         }
 
-        public static byte[] ReadFully(Stream input)
+        void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
-            byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
-                return ms.ToArray();
-            }
+            udpc.Send(e.Buffer, e.Buffer.Length, ipEndPoint);
         }
 
-        public void StopRecording()
+        void waveIn_RecordingStopped(object sender, EventArgs e)
         {
-            packetNumber = 0;
-            sourceStream.StopRecording();
-            var data = ReadFully(memoryStream);
-            memoryStream.Close();
+            waveIn.Dispose();
+            waveIn = null;
         }
 
-        public void EndCall()
+        void Exit()
         {
-            StopRecording();
-            waveWriter.Close();
+            if (waveIn == null) return;
+            recieve_thread.Abort();
+            waveIn.StopRecording();
+            waveOut.Dispose();
+            waveOut = null;
+            udpc = null;
         }
 
-        public void PlayMessage(byte[] message)
+        static void recv()
         {
-            WaveOut waveOut = new WaveOut();
-            byte[] bytes = new byte[message.Length];
-
-            IWaveProvider provider = new RawSourceWaveStream(
-                new MemoryStream(bytes), new WaveFormat());
-
-            waveOut.Init(provider);
+            BufferedWaveProvider PlayBuffer = new BufferedWaveProvider(waveIn.WaveFormat);
+            waveOut.Init(PlayBuffer);
             waveOut.Play();
-        }
 
-
-        private void sourceStream_DataAvailable(object sender, WaveInEventArgs e)
-        {
-            if (waveWriter == null) return;
-            waveWriter.Write(e.Buffer, 0, e.BytesRecorded);
-            waveWriter.Flush();
-            buffer = e.Buffer;
-            packetNumber++;
+            while (true)
+            {
+                incoming = udpc.Receive(ref ipEndPoint);
+                PlayBuffer.AddSamples(incoming, 0, incoming.Length);
+            }
         }
     }
 }
