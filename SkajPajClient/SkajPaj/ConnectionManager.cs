@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ namespace SkajPaj
     class ConnectionManager
     {
         //TODO Sending and receiving data out of local network
+        private bool calling = true;
         private Socket clientSocket;
         private UdpClient udpClient;
         private string clientName;
@@ -36,7 +38,7 @@ namespace SkajPaj
 
                 //TODO Change IP to send to ip from serwer
                 var serverIp = IPAddress.Parse("192.168.1.33");
-                serverIpEndPoint = new IPEndPoint(serverIp, 3000);
+                serverIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
                 udpClient = new UdpClient();
 
                 serverEndPoint = (EndPoint)serverIpEndPoint;
@@ -89,7 +91,47 @@ namespace SkajPaj
                 MessageBox.Show("Send Error: " + ex.Message, "UDP Client", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        
+
+        public void ReceiveMessage()
+        {
+            Connect(null);
+
+            try
+            {
+                UDPListener();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
+
+        private void UDPListener()
+        {
+            Task.Run(async () =>
+            {
+                using (var udpClient = new UdpClient(3000))
+                {
+                    calling = true;
+                    while (calling)
+                    {
+                        //IPEndPoint object will allow us to read datagrams sent from any source.
+                        var receivedResults = await udpClient.ReceiveAsync();
+                        var s = receivedResults.Buffer;
+                        string str = null;
+                        foreach (var sa in s)
+                        {
+                            str = String.Concat(str, sa.ToString());
+                        }
+
+                        var listenerString = Encoding.ASCII.GetString(s);
+                        MessageBox.Show("Receive Data: " + listenerString + "\t" + str);
+                        if (listenerString.Equals("BYE")) calling = false;
+                    }
+                }
+            });
+        }
+
 
         //TODO Receive by UpdClient
         private void ReceiveData(IAsyncResult ar)
