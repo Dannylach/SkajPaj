@@ -26,6 +26,8 @@ namespace SkajPajClientWPF.Audio
         private string clientName;
         private EndPoint friendEndPoint;
 
+        public string callersIpAddress = null;
+
         /// <summary>
         /// Initializes all vital instances.
         /// </summary>
@@ -114,7 +116,7 @@ namespace SkajPajClientWPF.Audio
         /// <summary>
         /// Exits this instance.
         /// </summary>
-        void Exit()
+        public void Exit()
         {
             if (waveIn == null) return;
             recieve_thread.Abort();
@@ -216,7 +218,7 @@ namespace SkajPajClientWPF.Audio
             var receivedString = Encoding.ASCII.GetString(dataPacket.Message);
 
             if (receivedString.Contains("HELLO"))
-                BeginCall(HelloResponse(receivedString));
+                AnswerHello(HelloResponse(receivedString));
             else if (receivedString.Contains("BYE"))
             {
                 Exit();
@@ -233,6 +235,16 @@ namespace SkajPajClientWPF.Audio
         string HelloResponse(string message)
         {
             return message.Remove(0, 6);
+        }
+
+        /// <summary>
+        /// Answers the HELLO message.
+        /// </summary>
+        /// <param name="ipAddress">The ip address.</param>
+        void AnswerHello(string ipAddress)
+        {
+            callersIpAddress = ipAddress;
+            StartCall(ipAddress);
         }
 
         /// <summary>

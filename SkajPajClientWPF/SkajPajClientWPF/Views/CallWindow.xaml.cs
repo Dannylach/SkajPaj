@@ -45,6 +45,7 @@ namespace SkajPajClientWPF.Views
         public void CloseWindow(Object source, EventArgs args)
         {
             Close();
+            audioManager.Exit();
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
