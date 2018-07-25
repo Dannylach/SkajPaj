@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SkajPajClientWPF.Audio;
 
 namespace SkajPajClientWPF.Views
 {
@@ -22,10 +23,14 @@ namespace SkajPajClientWPF.Views
     {
         int time = 0;
         CallViewModel cvm;
+        private AudioManager audioManager;
 
         public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state)
         {
             InitializeComponent();
+            audioManager = new AudioManager();
+            audioManager.Initialize(login);
+            audioManager.StartCall(address_ip);
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += dispatcherTimer_Tick;

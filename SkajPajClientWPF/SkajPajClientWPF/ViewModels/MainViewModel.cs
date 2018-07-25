@@ -15,6 +15,8 @@ namespace SkajPajClientWPF.ViewModels
         public MainViewModel(string login, string password)
         {
             MainModel = new MainModel();
+            AudioManager = new AudioManager();
+            AudioManager.ListenForMessage();
             try
             {
                 MainModel.UserData = MainModel.RestWebApiRequest.ReadUserData(login, password);
@@ -61,6 +63,7 @@ namespace SkajPajClientWPF.ViewModels
         private void CallToLogin(string login)
         {
             ReadFriendDataRequest tmp = MainModel.RestWebApiRequest.ReadFriendData(MainModel.UserData.Login, MainModel.UserData.Password, login);
+            AudioManager.BeginCall(tmp.address_ip);
             if (tmp.read_data)
             {
                 string avatar = tmp.avatar;
