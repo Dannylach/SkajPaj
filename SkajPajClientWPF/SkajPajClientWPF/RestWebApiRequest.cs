@@ -16,7 +16,7 @@ namespace SkajPajClientWPF
         public const string SERVER_DOMAIN_INTERNET = "http://skajpaj.azurewebsites.net/api/";
         public const string SERVER_DOMAIN_LOCAL = "http://localhost/PHP-REST-API-Skajpaj-server/api/";
 
-        public const string SERVER_DOMAIN = SERVER_DOMAIN_LOCAL;
+        public const string SERVER_DOMAIN = SERVER_DOMAIN_INTERNET;
 
         public const string SIGN_IN = "user/sign_in.php?";
         public const string READ_USER_DATA = "user/read_user_data.php?";
