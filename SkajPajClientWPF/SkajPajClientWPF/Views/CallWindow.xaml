@@ -26,17 +26,17 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Vertical">
-            <Image Source="{Binding FriendAvatar}" Height="150" Width="150" Stretch="Fill"/>
-            <TextBlock Text="{Binding FriendLogin}" TextAlignment="Center" Margin="20" FontSize="20"/>
+            <Image Source="{Binding CallModel.FriendAvatar}" Height="150" Width="150" Stretch="Fill"/>
+            <TextBlock Text="{Binding CallModel.FriendLogin}" TextAlignment="Center" Margin="20" FontSize="20"/>
             <TextBlock Name="Timer" Text="Czas:  0s" TextAlignment="Center" Margin="10" FontSize="15"/>
-            <TextBlock Text="{Binding CallState}" TextAlignment="Center" Margin="10" FontSize="15"/>
+            <TextBlock Text="{Binding CallModel.CallState}" TextAlignment="Center" Margin="10" FontSize="15"/>
         </StackPanel>
 
-        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="150" Content="Zrezygnuj z połączenia" Height="30" Command="{Binding Command}" Background="OrangeRed" Visibility="{Binding OpenCallVisibility}"/>
+        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="150" Content="Zrezygnuj z połączenia" Height="30" Command="{Binding Command}" Background="OrangeRed" Visibility="{Binding CallModel.OpenCallVisibility}"/>
 
-        <Button Grid.Row="2" Grid.Column="1" Width="120" Content="Odrzuć" Height="30" Command="{Binding Command}" Background="#57c86c" Visibility="{Binding DecisionCallVisibility}"/>
-        <Button Grid.Row="2" Grid.Column="2" Content="Odbierz" Width="120" Height="30" Command="{Binding Command}" Background="#FE3C2E" Visibility="{Binding DecisionCallVisibility}"/>
+        <Button Grid.Row="2" Grid.Column="1" Width="120" Content="Odrzuć" Height="30" Command="{Binding Command}" Background="#57c86c" Visibility="{Binding CallModel.DecisionCallVisibility}"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="Odbierz" Width="120" Height="30" Command="{Binding Command}" Background="#FE3C2E" Visibility="{Binding CallModel.DecisionCallVisibility}"/>
 
-        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="130" Content="Zakończ połączenie" Height="30" Command="{Binding Command}" Background="Red" Visibility="{Binding VoiceCallVisibility}"/>
+        <Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Width="130" Content="Zakończ połączenie" Height="30" Command="{Binding Command}" Background="Red" Visibility="{Binding CallModel.VoiceCallVisibility}"/>
     </Grid>
 </Window>

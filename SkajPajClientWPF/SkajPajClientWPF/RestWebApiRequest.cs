@@ -234,7 +234,7 @@ namespace SkajPajClientWPF
             return false;
         }
 
-        public int CreateCall(string login, string password, string receiver_login)
+        public string CreateCall(string login, string password, string receiver_login)
         {
             string request = SERVER_DOMAIN + CREATE_CALL + "login=" + login + "&password=" + password + "&receiver_login=" + receiver_login;
             string json = makeRequest(request);
@@ -243,14 +243,14 @@ namespace SkajPajClientWPF
             {
                 CreateCallRequest editIPAddressRequest = JsonConvert.DeserializeObject<CreateCallRequest>(json);
 
-                return Convert.ToInt32(editIPAddressRequest.call_id);
+                return editIPAddressRequest.call_id;
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
 
-            return 0;
+            return "0";
         }
 
         public ReadFriendDataRequest ReadFriendData(string login, string password, string friend_login)
@@ -269,6 +269,25 @@ namespace SkajPajClientWPF
                 MessageBox.Show(e.ToString());
             }
             return null;
+        }
+
+        public bool ReceivedCall(string login, string password, string call_id, string is_received)
+        {
+            string request = SERVER_DOMAIN + RECEIVED_CALL + "login=" + login + "&password=" + password + "&call_id=" + call_id + "&is_received=" + is_received;
+            string json = makeRequest(request);
+
+            try
+            {
+                ReceivedCallRequest receivedCallRequest = JsonConvert.DeserializeObject<ReceivedCallRequest>(json);
+
+                return receivedCallRequest.received_call;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return false;
         }
     }
 }

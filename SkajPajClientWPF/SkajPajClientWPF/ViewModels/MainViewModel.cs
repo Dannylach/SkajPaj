@@ -65,10 +65,17 @@ namespace SkajPajClientWPF.ViewModels
             {
                 string avatar = tmp.avatar;
                 string address_ip = tmp.address_ip;
-                string call_id = "TO DO"; // TODO CREATE CALL
+                string call_id = MainModel.RestWebApiRequest.CreateCall(MainModel.UserData.Login, MainModel.UserData.Password, login);
 
-                CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id);
-                loginnWindow.ShowDialog();
+                if (call_id != "0")
+                {
+                    CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "create");
+                    loginnWindow.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Nieudało się wywołać połączenia.");
+                }
             }
             else
             {

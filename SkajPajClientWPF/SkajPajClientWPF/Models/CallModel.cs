@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
-namespace SkajPajClientWPF.Models
+namespace SkajPajClientWPF.Models 
 {
     public class CallModel : ObservableObject
     {
@@ -43,10 +44,55 @@ namespace SkajPajClientWPF.Models
             }
         }
 
-        public CallModel(string login, string password, string avatar, string friendLogin, string addressIp, string callId, string callState)
+        public CallModel(string login, string password, string avatar, string friendLogin, string addressIp, string callId, string State)
         {
             Login = login; Password = password; FriendLogin = friendLogin; FriendAddressIP = addressIp;
-            CallID = callId; CallState = CallState; FriendAvatar = avatar;
+            CallID = callId; CallState = State; FriendAvatar = avatar;
+            changeState(CallState);
         }
+
+        private void changeState(string s)
+        {
+            OpenCallVisibility = "Hidden";
+            DecisionCallVisibility = "Hidden";
+            VoiceCallVisibility = "Hidden";
+            switch (s)
+            {
+                case "create":
+                    OpenCallVisibility = "Visible";
+                    break;
+                case "select":
+                    DecisionCallVisibility = "Visible";
+                    break;
+                case "call":
+                    VoiceCallVisibility = "Visible";
+                    break;
+                default:
+                    MessageBox.Show("ERROR");
+                    break;
+            }
+        }
+
+        private string _button1Visibity;
+        public string OpenCallVisibility
+        {
+            get { return _button1Visibity; }
+            set { _button1Visibity = value; }
+        }
+        
+        private string _button2Visibity;
+        public string DecisionCallVisibility
+        {
+            get { return _button2Visibity; }
+            set { _button2Visibity = value; }
+        }
+
+        private string _button4Visibity;
+        public string VoiceCallVisibility
+        {
+            get { return _button4Visibity; }
+            set { _button4Visibity = value; }
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkajPajClientWPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,9 @@ namespace SkajPajClientWPF.Views
     public partial class CallWindow : Window
     {
         int time = 0;
+        CallViewModel cvm;
 
-        public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id)
+        public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state)
         {
             InitializeComponent();
 
@@ -29,6 +31,15 @@ namespace SkajPajClientWPF.Views
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
+
+            cvm = new CallViewModel(login, password, friendAvatar, friendLogin, address_ip, call_id, state);
+            cvm.RequestClose += new EventHandler(CloseWindow);
+            DataContext = cvm;
+        }
+
+        public void CloseWindow(Object source, EventArgs args)
+        {
+            Close();
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)

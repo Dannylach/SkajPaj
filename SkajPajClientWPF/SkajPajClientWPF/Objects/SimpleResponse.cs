@@ -103,4 +103,10 @@ namespace SkajPajClientWPF.Objects
         public string avatar;
         public string address_ip;
     }
+
+    public class ReceivedCallRequest
+    {
+        public string message;
+        public bool received_call;
+    }
 }
