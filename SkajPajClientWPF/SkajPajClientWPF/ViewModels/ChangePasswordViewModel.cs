@@ -23,7 +23,7 @@ namespace SkajPajClientWPF.ViewModels
                     SHA.GenerateSHA256String(PasswordConvert.convertToUNSecureString(SecurePassword2))
                     ))
                 {
-                    MessageBox.Show("Udało się zmienić hasło.");
+                    MessageBox.Show("Udało się zmienić hasło. Zaloguj się ponownie używając nowego hasła.");
                     CloseWindow();
                 }
                 else

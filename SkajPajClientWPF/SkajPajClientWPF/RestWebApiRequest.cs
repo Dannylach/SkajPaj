@@ -30,6 +30,7 @@ namespace SkajPajClientWPF
         public const string CREATE_CALL = "call/create_call.php?";
         public const string RECEIVED_CALL = "call/received_call.php?";
         public const string END_CALL = "call/end_call.php?";
+        public const string READ_FRIEND_DATA = "user/read_friend_data.php?";
         private object searchResults;
 
         public RestClient RestClient { get; private set; }
@@ -231,6 +232,43 @@ namespace SkajPajClientWPF
             }
 
             return false;
+        }
+
+        public int CreateCall(string login, string password, string receiver_login)
+        {
+            string request = SERVER_DOMAIN + CREATE_CALL + "login=" + login + "&password=" + password + "&receiver_login=" + receiver_login;
+            string json = makeRequest(request);
+
+            try
+            {
+                CreateCallRequest editIPAddressRequest = JsonConvert.DeserializeObject<CreateCallRequest>(json);
+
+                return Convert.ToInt32(editIPAddressRequest.call_id);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return 0;
+        }
+
+        public ReadFriendDataRequest ReadFriendData(string login, string password, string friend_login)
+        {
+            string request = SERVER_DOMAIN + READ_FRIEND_DATA + "login=" + login + "&password=" + password + "&friend_login=" + friend_login;
+            string json = makeRequest(request);
+
+            try
+            {
+                ReadFriendDataRequest readFriendDataRequest = JsonConvert.DeserializeObject<ReadFriendDataRequest>(json);
+
+                return readFriendDataRequest;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            return null;
         }
     }
 }

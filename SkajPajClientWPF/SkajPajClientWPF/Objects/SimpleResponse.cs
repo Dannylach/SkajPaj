@@ -87,4 +87,20 @@ namespace SkajPajClientWPF.Objects
         public string message;
         public bool edit_address_ip;
     }
+
+    public class CreateCallRequest
+    {
+        public string message;
+        public string call_id;
+        public bool add_call;
+    }
+
+    public class ReadFriendDataRequest
+    {
+        public string message;
+        public bool read_data;
+        public string login;
+        public string avatar;
+        public string address_ip;
+    }
 }

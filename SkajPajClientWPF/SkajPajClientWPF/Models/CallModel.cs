@@ -22,7 +22,31 @@ namespace SkajPajClientWPF.Models
         public string FriendAddressIP { get => _friendAddressIP; set => _friendAddressIP = value; }
         public string CallID { get => _callID; set => _callID = value; }
         public string CallState { get => _callState; set => _callState = value; }
-        public string FriendAvatar { get => _friendAvatar; set => _friendAvatar = value; }
         public string FriendLogin { get => _friendLogin; set => _friendLogin = value; }
+
+        public string FriendAvatar
+        {
+            get
+            {
+                for (int i = 1; i < 13; i++)
+                {
+                    if (_friendAvatar == i.ToString())
+                    {
+                        return "..\\Images\\Avatars\\" + _friendAvatar + ".PNG";
+                    }
+                }
+                return "..\\Images\\Avatars\\DEFAULT.PNG"; ;
+            }
+            set
+            {
+                _friendAvatar = value;
+            }
+        }
+
+        public CallModel(string login, string password, string avatar, string friendLogin, string addressIp, string callId, string callState)
+        {
+            Login = login; Password = password; FriendLogin = friendLogin; FriendAddressIP = addressIp;
+            CallID = callId; CallState = CallState; FriendAvatar = avatar;
+        }
     }
 }

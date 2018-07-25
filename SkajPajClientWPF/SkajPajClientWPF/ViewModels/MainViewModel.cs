@@ -60,12 +60,20 @@ namespace SkajPajClientWPF.ViewModels
 
         private void CallToLogin(string login)
         {
-            string avatar = "TO DO";
-            string address_ip = "TO DO";
-            string call_id = "TO DO"; // TODO CREATE CALL
+            ReadFriendDataRequest tmp = MainModel.RestWebApiRequest.ReadFriendData(MainModel.UserData.Login, MainModel.UserData.Password, login);
+            if (tmp.read_data)
+            {
+                string avatar = tmp.avatar;
+                string address_ip = tmp.address_ip;
+                string call_id = "TO DO"; // TODO CREATE CALL
 
-            CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar,  login, address_ip, call_id);
-            loginnWindow.ShowDialog();
+                CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id);
+                loginnWindow.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Użytkownik o podanym loginie prawdopodobnie nie istnieje.");
+            }
         }
 
         public MainViewModel()
@@ -129,6 +137,7 @@ namespace SkajPajClientWPF.ViewModels
         {
             ChangePasswordWindow loginnWindow = new ChangePasswordWindow(MainModel.UserData.Login);
             loginnWindow.ShowDialog();
+            LogOut();
         }
     }
 }
