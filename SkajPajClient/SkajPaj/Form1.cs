@@ -18,8 +18,13 @@ namespace SkajPaj
     {
         private readonly AudioManager audioManager = new AudioManager();
         private readonly ConnectionManager connectionManager = new ConnectionManager();
+<<<<<<< HEAD
         private string userName = "łukasz";
         private string ip = "192.168.43.227";
+=======
+        private string userName = "Daniel";
+        private string ip = "192.168.43.24";
+>>>>>>> 36a49807096b462b4a5d4b19ba36296e4afee355
 
         public Form1()
         {
