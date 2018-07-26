@@ -64,19 +64,11 @@ namespace SkajPajClientWPF.ViewModels
         private void CallToLogin(string login)
         {
             ReadFriendDataRequest tmp = MainModel.RestWebApiRequest.ReadFriendData(MainModel.UserData.Login, MainModel.UserData.Password, login);
-<<<<<<< HEAD
-            AudioManager.BeginCall("192.168.43.227");// tmp.address_ip);
-            if (tmp.read_data)
-            {
-                string avatar = tmp.avatar;
-                string address_ip = "192.168.43.227";// tmp.address_ip;
-=======
             AudioManager.BeginCall("192.168.43.227");
             if (tmp.read_data)
             {
                 string avatar = tmp.avatar;
                 string address_ip = "192.168.43.227";
->>>>>>> 36a49807096b462b4a5d4b19ba36296e4afee355
                 string call_id = MainModel.RestWebApiRequest.CreateCall(MainModel.UserData.Login, MainModel.UserData.Password, login);
 
                 if (call_id != "0")
