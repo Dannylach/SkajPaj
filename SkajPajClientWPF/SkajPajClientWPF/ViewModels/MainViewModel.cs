@@ -17,7 +17,7 @@ namespace SkajPajClientWPF.ViewModels
             MainModel = new MainModel();
             AudioManager = new AudioManager();
             AudioManager.Initialize(login);
-            AudioManager.ListenForMessage();
+            AudioManager.ListenForMessage(login, password);
             try
             {
                 MainModel.UserData = MainModel.RestWebApiRequest.ReadUserData(login, password);
@@ -64,11 +64,11 @@ namespace SkajPajClientWPF.ViewModels
         private void CallToLogin(string login)
         {
             ReadFriendDataRequest tmp = MainModel.RestWebApiRequest.ReadFriendData(MainModel.UserData.Login, MainModel.UserData.Password, login);
-            AudioManager.BeginCall("192.168.43.24");
+            AudioManager.BeginCall("192.168.43.227");
             if (tmp.read_data)
             {
                 string avatar = tmp.avatar;
-                string address_ip = "192.168.43.24";
+                string address_ip = "192.168.43.227";
                 string call_id = MainModel.RestWebApiRequest.CreateCall(MainModel.UserData.Login, MainModel.UserData.Password, login);
 
                 if (call_id != "0")

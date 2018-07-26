@@ -25,6 +25,11 @@ namespace SkajPajClientWPF.Views
         CallViewModel cvm;
         private AudioManager audioManager;
 
+        public CallWindow()
+        {
+
+        }
+
         public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state)
         {
             InitializeComponent();
