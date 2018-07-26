@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
+using SkajPajClientWPF.Views;
 
 namespace SkajPajClientWPF.Audio
 {
@@ -19,6 +20,11 @@ namespace SkajPajClientWPF.Audio
         static IPEndPoint ipEndPoint;
         static byte[] incoming;
         static int port = 3000;
+
+        private string login;
+        private string password;
+        private string friendLogin = "luk";
+        private string state = "create";
 
         private MemoryStream memoryStream;
         private int packetNumber = 0;
@@ -43,6 +49,7 @@ namespace SkajPajClientWPF.Audio
                 waveIn.BufferMilliseconds = 100;
                 waveIn.NumberOfBuffers = 10;
                 waveOut = new WaveOut();
+                ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.43.24"), port);
 
                 waveIn.DeviceNumber = 0;
                 waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
@@ -65,10 +72,12 @@ namespace SkajPajClientWPF.Audio
         /// <summary>
         /// Initializes UDP listening async task
         /// </summary>
-        public void ListenForMessage()
+        public void ListenForMessage(string login, string password)
         {
             try
             {
+                this.login = login;
+                this.password = password;
                 UDPListener();
             }
             catch (Exception e)
@@ -244,6 +253,7 @@ namespace SkajPajClientWPF.Audio
         void AnswerHello(string ipAddress)
         {
             callersIpAddress = ipAddress;
+            CallWindow cw = new CallWindow(login, password, null, friendLogin, GetLocalIPAddress(), ipAddress, state);
             StartCall(ipAddress);
         }
 

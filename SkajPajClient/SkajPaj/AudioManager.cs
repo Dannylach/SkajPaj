@@ -36,7 +36,7 @@ namespace SkajPaj
             try
             {
                 clientName = userLogin;
-                friendIpEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.33"), port);
+                friendIpEndPoint = new IPEndPoint(IPAddress.Parse("192.168.43.24"), port);
                 udpClient = new UdpClient(port);
                 friendEndPoint = (EndPoint)friendIpEndPoint;
 
@@ -64,8 +64,8 @@ namespace SkajPaj
 
         public void StartCall(string ip)
         {
-
             ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 40015);
+            udpClient = new UdpClient(40015);
             udpClient.Send(new byte[1], 1, ipEndPoint);
             recieve_thread = new Thread(recv);
             recieve_thread.Start();
@@ -91,6 +91,7 @@ namespace SkajPaj
             waveIn.StopRecording();
             waveOut.Dispose();
             waveOut = null;
+            
             udpClient = null;
             running = false;
         }
@@ -134,7 +135,7 @@ namespace SkajPaj
         {
             try
             {
-                var dataToSend = dataPacket.PackMessage();
+                var dataToSend = dataPacket.Message;
 
                 udpClient.BeginSend(dataToSend, dataToSend.Length, friendIpEndPoint, null, null);
             }
