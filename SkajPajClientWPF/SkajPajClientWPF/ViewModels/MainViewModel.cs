@@ -25,7 +25,7 @@ namespace SkajPajClientWPF.ViewModels
             {
                 MessageBox.Show(ex.ToString());
             }
-
+            
             UpdateFriendList();
             UpdateCallList();
         }
@@ -35,7 +35,7 @@ namespace SkajPajClientWPF.ViewModels
             MainModel.FriendList = MainModel.RestWebApiRequest.ListOfFriends(MainModel.UserData.Login, MainModel.UserData.Password);
             foreach (Friend f in MainModel.FriendList)
             {
-                f.ClickDelete += new EventHandler<FriendEventArgs>(CallToFriend);
+                f.ClickDelete += new EventHandler<FriendEventArgs>(DeleteFriend);
                 f.ClickCallToFriend += new EventHandler<FriendEventArgs>(CallToFriend);
             }
         }
@@ -63,11 +63,11 @@ namespace SkajPajClientWPF.ViewModels
         private void CallToLogin(string login)
         {
             ReadFriendDataRequest tmp = MainModel.RestWebApiRequest.ReadFriendData(MainModel.UserData.Login, MainModel.UserData.Password, login);
-            AudioManager.BeginCall(tmp.address_ip);
+            AudioManager.BeginCall("192.168.43.227");// tmp.address_ip);
             if (tmp.read_data)
             {
                 string avatar = tmp.avatar;
-                string address_ip = tmp.address_ip;
+                string address_ip = "192.168.43.227";// tmp.address_ip;
                 string call_id = MainModel.RestWebApiRequest.CreateCall(MainModel.UserData.Login, MainModel.UserData.Password, login);
 
                 if (call_id != "0")
@@ -84,6 +84,8 @@ namespace SkajPajClientWPF.ViewModels
             {
                 MessageBox.Show("Użytkownik o podanym loginie prawdopodobnie nie istnieje.");
             }
+
+            UpdateCallList();
         }
 
         public MainViewModel()

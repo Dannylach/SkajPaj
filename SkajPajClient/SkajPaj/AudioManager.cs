@@ -84,7 +84,7 @@ namespace SkajPaj
             waveIn = null;
         }
 
-        void Exit()
+        public void Exit()
         {
             if (waveIn == null) return;
             recieve_thread.Abort();

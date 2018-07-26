@@ -31,10 +31,9 @@ namespace SkajPaj
             try
             {
                 clientName = userLogin;
-                serverIpEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.33"), port);
+                serverIpEndPoint = new IPEndPoint(IPAddress.Parse("192.168.43.227"), port);
                 udpClient = new UdpClient(port);
                 serverEndPoint = (EndPoint)serverIpEndPoint;
-                
             }
             catch (Exception ex)
             {
@@ -95,7 +94,7 @@ namespace SkajPaj
             {
                 using (udpClient = new UdpClient(port))
                 {
-                    while (calling)
+                    while (true)
                     {
                         var receivedResults = await udpClient.ReceiveAsync();
                         var receivedByte = receivedResults.Buffer;
