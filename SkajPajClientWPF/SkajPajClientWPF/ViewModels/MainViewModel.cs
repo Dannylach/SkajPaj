@@ -5,12 +5,99 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using SkajPajClientWPF.Audio;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows.Controls;
 
 namespace SkajPajClientWPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
         public AudioManager AudioManager = new AudioManager();
+
+        //detect call
+        private BackgroundWorker m_oBackgroundWorker = null;
+        private CallDetectWindow cdw;
+        private void StartBackgroundWorker()
+        {
+            cdw = new CallDetectWindow();
+            cdw.Show();
+
+            if (null == m_oBackgroundWorker)
+            {
+                m_oBackgroundWorker = new BackgroundWorker();
+                m_oBackgroundWorker.DoWork +=
+                    new DoWorkEventHandler(m_oBackgroundWorker_DoWork);
+                m_oBackgroundWorker.RunWorkerCompleted +=
+                    new RunWorkerCompletedEventHandler(
+                    m_oBackgroundWorker_RunWorkerCompleted);
+                m_oBackgroundWorker.ProgressChanged +=
+                    new ProgressChangedEventHandler(m_oBackgroundWorker_ProgressChanged);
+                m_oBackgroundWorker.WorkerReportsProgress = true;
+                m_oBackgroundWorker.WorkerSupportsCancellation = true;
+            }
+            m_oBackgroundWorker.RunWorkerAsync();
+        }
+        private void StopBackgroundWorker()
+        {
+            if ((null != m_oBackgroundWorker) && m_oBackgroundWorker.IsBusy)
+            {
+                m_oBackgroundWorker.CancelAsync();
+            }
+        }
+        private void AppendLog(string sText)
+        {
+            cdw.StateTextBlock.Text = sText;
+            cdw.cdvm.Logs.Add(new Log("testxd", "ble ble ble ..."));
+        }
+        void m_oBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true) { 
+                if (m_oBackgroundWorker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+
+                m_oBackgroundWorker.ReportProgress(1);
+                //GET DETECT CALL ME
+                
+
+                Thread.Sleep(1000);
+
+                m_oBackgroundWorker.ReportProgress(2);
+
+                Thread.Sleep(1000);
+            }
+        }
+        void m_oBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (true)
+            {
+                if(e.ProgressPercentage == 1)
+                {
+                    AppendLog("SDF");
+                }
+                else if(e.ProgressPercentage == 2)
+                {
+                    AppendLog("DUPA");
+                }
+            }
+        }
+        void m_oBackgroundWorker_RunWorkerCompleted(object sender,
+    RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                AppendLog("Przerwano.");
+            }
+            else
+            {
+                AppendLog("Zakończono.");
+            }
+            cdw.Close();
+        }
+        //end detect call
 
         public MainViewModel(string login, string password)
         {
@@ -29,6 +116,8 @@ namespace SkajPajClientWPF.ViewModels
             
             UpdateFriendList();
             UpdateCallList();
+
+            StartBackgroundWorker();
         }
 
         private void UpdateFriendList()
@@ -63,6 +152,7 @@ namespace SkajPajClientWPF.ViewModels
 
         private void CallToLogin(string login)
         {
+            StopBackgroundWorker();
             ReadFriendDataRequest tmp = MainModel.RestWebApiRequest.ReadFriendData(MainModel.UserData.Login, MainModel.UserData.Password, login);
             AudioManager.BeginCall("192.168.43.227");
             if (tmp.read_data)
@@ -87,6 +177,7 @@ namespace SkajPajClientWPF.ViewModels
             }
 
             UpdateCallList();
+            StartBackgroundWorker();
         }
 
         public MainViewModel()
@@ -113,6 +204,7 @@ namespace SkajPajClientWPF.ViewModels
 
         private void LogOut()
         {
+            StopBackgroundWorker();
             LoginWindow loginnWindow = new LoginWindow();
             loginnWindow.Show();
             CloseWindow();

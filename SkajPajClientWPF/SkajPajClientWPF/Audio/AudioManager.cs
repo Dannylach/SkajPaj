@@ -49,7 +49,7 @@ namespace SkajPajClientWPF.Audio
                 waveIn.BufferMilliseconds = 100;
                 waveIn.NumberOfBuffers = 10;
                 waveOut = new WaveOut();
-                ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.43.24"), port);
+                ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.43.227"), port);
 
                 waveIn.DeviceNumber = 0;
                 waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);

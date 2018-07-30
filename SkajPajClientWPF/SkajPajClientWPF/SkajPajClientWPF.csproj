@@ -84,12 +84,16 @@
     <Compile Include="RelayCommanWithParamscs.cs" />
     <Compile Include="RestClient.cs" />
     <Compile Include="RestWebApiRequest.cs" />
+    <Compile Include="ViewModels\CallDetectViewModel.cs" />
     <Compile Include="ViewModels\CallViewModel.cs" />
     <Compile Include="ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RegistrationViewModel.cs" />
     <Compile Include="ViewModels\TestApiViewModel.cs" />
+    <Compile Include="Views\CallDetectWindow.xaml.cs">
+      <DependentUpon>CallDetectWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CallWindow.xaml.cs">
       <DependentUpon>CallWindow.xaml</DependentUpon>
     </Compile>
@@ -137,6 +141,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\CallDetectWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CallWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
