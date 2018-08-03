@@ -7,13 +7,12 @@ using System.Windows.Input;
 using SkajPajClientWPF.Audio;
 using System.ComponentModel;
 using System.Threading;
-using System.Windows.Controls;
 
 namespace SkajPajClientWPF.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        public AudioManager AudioManager = new AudioManager();
+        //public AudioManager AudioManager = new AudioManager();
 
         //detect call
         private BackgroundWorker m_oBackgroundWorker = null;
@@ -45,10 +44,9 @@ namespace SkajPajClientWPF.ViewModels
                 m_oBackgroundWorker.CancelAsync();
             }
         }
-        private void AppendLog(string sText)
+        private void AppendLog(string detectCall, string content)
         {
-            cdw.StateTextBlock.Text = sText;
-            cdw.cdvm.Logs.Add(new Log("testxd", "ble ble ble ..."));
+            cdw.cdvm.Logs.Add(new Log(detectCall, content));
         }
         void m_oBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -59,13 +57,11 @@ namespace SkajPajClientWPF.ViewModels
                     break;
                 }
 
-                m_oBackgroundWorker.ReportProgress(1);
-                //GET DETECT CALL ME
+                //Thread.Sleep(5000);
+
+                DetectCallRequest detectCallRequest = MainModel.RestWebApiRequest.DetectCall(MainModel.UserData.Login, MainModel.UserData.Password);
                 
-
-                Thread.Sleep(1000);
-
-                m_oBackgroundWorker.ReportProgress(2);
+                m_oBackgroundWorker.ReportProgress(1,detectCallRequest);
 
                 Thread.Sleep(1000);
             }
@@ -74,13 +70,15 @@ namespace SkajPajClientWPF.ViewModels
         {
             if (true)
             {
-                if(e.ProgressPercentage == 1)
+                DetectCallRequest detectCallRequest = (DetectCallRequest)e.UserState;
+                AppendLog(detectCallRequest.detect_call.ToString(), detectCallRequest.delta_time.ToString());
+                if (detectCallRequest.detect_call && detectCallRequest.delta_time < 4)
                 {
-                    AppendLog("SDF");
-                }
-                else if(e.ProgressPercentage == 2)
-                {
-                    AppendLog("DUPA");
+                    ReceiveCall(
+                        detectCallRequest.login,
+                        detectCallRequest.avatar,
+                        detectCallRequest.address_ip,
+                        "XD");
                 }
             }
         }
@@ -89,11 +87,11 @@ namespace SkajPajClientWPF.ViewModels
         {
             if (e.Cancelled)
             {
-                AppendLog("Przerwano.");
+                //AppendLog("Przerwano.");
             }
             else
             {
-                AppendLog("Zakończono.");
+                //AppendLog("Zakończono.");
             }
             cdw.Close();
         }
@@ -102,9 +100,9 @@ namespace SkajPajClientWPF.ViewModels
         public MainViewModel(string login, string password)
         {
             MainModel = new MainModel();
-            AudioManager = new AudioManager();
-            AudioManager.Initialize(login);
-            AudioManager.ListenForMessage(login, password);
+            //AudioManager = new AudioManager();
+            //AudioManager.Initialize(login);
+            //AudioManager.ListenForMessage(login, password);
             try
             {
                 MainModel.UserData = MainModel.RestWebApiRequest.ReadUserData(login, password);
@@ -154,17 +152,17 @@ namespace SkajPajClientWPF.ViewModels
         {
             StopBackgroundWorker();
             ReadFriendDataRequest tmp = MainModel.RestWebApiRequest.ReadFriendData(MainModel.UserData.Login, MainModel.UserData.Password, login);
-            AudioManager.BeginCall("192.168.43.24");
+            //AudioManager.BeginCall("192.168.43.24");
             if (tmp.read_data)
             {
                 string avatar = tmp.avatar;
-                string address_ip = "192.168.43.24";
+                string address_ip = tmp.address_ip;// "192.168.43.24";
                 string call_id = MainModel.RestWebApiRequest.CreateCall(MainModel.UserData.Login, MainModel.UserData.Password, login);
 
                 if (call_id != "0")
                 {
-                    CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "create");
-                    loginnWindow.ShowDialog();
+                    CallWindow callWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "create");
+                    callWindow.ShowDialog();
                 }
                 else
                 {
@@ -176,6 +174,15 @@ namespace SkajPajClientWPF.ViewModels
                 MessageBox.Show("Użytkownik o podanym loginie prawdopodobnie nie istnieje.");
             }
 
+            UpdateCallList();
+            StartBackgroundWorker();
+        }
+
+        public void ReceiveCall(string login, string avatar, string address_ip, string call_id)
+        {
+            StopBackgroundWorker();
+            CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "select");
+            loginnWindow.ShowDialog();
             UpdateCallList();
             StartBackgroundWorker();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -94,5 +95,11 @@ namespace SkajPajClientWPF.Models
             set { _button4Visibity = value; }
         }
 
+
+        private string _message = string.Empty;
+        public string Message { get => _message; set => _message = value; }
+
+        private ObservableCollection<string> _chat = new ObservableCollection<string>();
+        public ObservableCollection<string> Chat { get => _chat; set => _chat = value; }
     }
 }

@@ -13,8 +13,8 @@ namespace SkajPajClientWPF
 {
     public class RestWebApiRequest
     {
-        public const string SERVER_DOMAIN_INTERNET = "http://skajpaj.azurewebsites.net/api/";
-        public const string SERVER_DOMAIN_LOCAL = "http://localhost/PHP-REST-API-Skajpaj-server/api/";
+        public const string SERVER_DOMAIN_INTERNET = "https://skajpaj.azurewebsites.net/api/";
+        public const string SERVER_DOMAIN_LOCAL = "https://localhost/PHP-REST-API-Skajpaj-server/api/";
 
         public const string SERVER_DOMAIN = SERVER_DOMAIN_INTERNET;
 
@@ -31,6 +31,7 @@ namespace SkajPajClientWPF
         public const string RECEIVED_CALL = "call/received_call.php?";
         public const string END_CALL = "call/end_call.php?";
         public const string READ_FRIEND_DATA = "user/read_friend_data.php?";
+        public const string CALL_DETECT = "call/call_detect.php?";
         private object searchResults;
 
         public RestClient RestClient { get; private set; }
@@ -288,6 +289,25 @@ namespace SkajPajClientWPF
             }
 
             return false;
+        }
+
+        public DetectCallRequest DetectCall(string login, string password)
+        {
+            string request = SERVER_DOMAIN + CALL_DETECT + "login=" + login + "&password=" + password;
+            string json = makeRequest(request);
+
+            try
+            {
+                DetectCallRequest detectCallRequest = JsonConvert.DeserializeObject<DetectCallRequest>(json);
+
+                return detectCallRequest;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return null;
         }
     }
 }

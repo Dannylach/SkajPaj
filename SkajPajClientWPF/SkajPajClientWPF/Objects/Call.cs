@@ -32,7 +32,8 @@ namespace SkajPajClientWPF.Objects
             get
             {
                 DateTime tmp = new DateTime(StartDate.Year,StartDate.Month, StartDate.Day, 
-                    StartDate.Hour+9, StartDate.Minute, StartDate.Second);
+                    StartDate.Hour, StartDate.Minute, StartDate.Second);
+                tmp = tmp.AddHours(9);
                 return tmp.ToString(new CultureInfo("pl-PL"));
             }
         }

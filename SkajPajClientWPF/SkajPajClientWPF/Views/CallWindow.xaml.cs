@@ -23,7 +23,7 @@ namespace SkajPajClientWPF.Views
     {
         int time = 0;
         CallViewModel cvm;
-        private AudioManager audioManager;
+        //private AudioManager audioManager;
 
         public CallWindow()
         {
@@ -33,9 +33,9 @@ namespace SkajPajClientWPF.Views
         public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state)
         {
             InitializeComponent();
-            audioManager = new AudioManager();
-            audioManager.Initialize(login);
-            audioManager.StartCall(address_ip);
+            //audioManager = new AudioManager();
+            //audioManager.Initialize(login);
+            //audioManager.StartCall(address_ip);
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += dispatcherTimer_Tick;
@@ -49,8 +49,8 @@ namespace SkajPajClientWPF.Views
 
         public void CloseWindow(Object source, EventArgs args)
         {
+            //audioManager.Exit();
             Close();
-            audioManager.Exit();
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -68,6 +68,11 @@ namespace SkajPajClientWPF.Views
                 return secunds.ToString() + " sekund";
             }
             return minutes.ToString() + " minut " + secunds.ToString() + " sekund";
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            cvm.sck.Close();
         }
     }
 }

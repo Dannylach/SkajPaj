@@ -109,4 +109,15 @@ namespace SkajPajClientWPF.Objects
         public string message;
         public bool received_call;
     }
+
+    public class DetectCallRequest
+    {
+        public string message;
+        public string login;
+        public string avatar;
+        public string address_ip;
+        public string is_received;
+        public bool detect_call;
+        public int delta_time;
+    }
 }
