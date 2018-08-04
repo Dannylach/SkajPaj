@@ -74,6 +74,7 @@
     <Compile Include="Models\MainModel.cs" />
     <Compile Include="Models\RegistrationModel.cs" />
     <Compile Include="Models\TestRestApiModel.cs" />
+    <Compile Include="MusicPlayer.cs" />
     <Compile Include="Objects\Call.cs" />
     <Compile Include="Objects\Friend.cs" />
     <Compile Include="Objects\SimpleResponse.cs" />
@@ -189,6 +190,9 @@
     <Resource Include="Images\Avatars\7.PNG" />
     <Resource Include="Images\Avatars\8.PNG" />
     <Resource Include="Images\Avatars\9.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Audio\sound.mp3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,6 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SkajPajClientWPF.Audio;
+using System.Threading;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.ComponentModel;
 
 namespace SkajPajClientWPF.Views
 {
@@ -22,7 +26,7 @@ namespace SkajPajClientWPF.Views
     public partial class CallWindow : Window
     {
         int time = 0;
-        CallViewModel cvm;
+        public CallViewModel cvm;
         //private AudioManager audioManager;
 
         public CallWindow()
@@ -30,26 +34,63 @@ namespace SkajPajClientWPF.Views
 
         }
 
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x80000;
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        private bool pleaseClose = false;
+        /*
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (!pleaseClose)
+            {cvm.sck.Close();
+                base.OnClosing(e);
+                e.Cancel = true;
+            }
+        }*/
+
         public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state)
         {
             InitializeComponent();
+            var hwnd = new WindowInteropHelper(this).Handle;
+            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
             //audioManager = new AudioManager();
             //audioManager.Initialize(login);
             //audioManager.StartCall(address_ip);
 
-            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            NotWaitToCallButton.IsEnabled = false;
+            SendButton.IsEnabled = false;
 
-            cvm = new CallViewModel(login, password, friendAvatar, friendLogin, address_ip, call_id, state);
+            NotReceiveButton.IsEnabled = false;
+            StartCallButton.IsEnabled = false;
+
+            cvm = new CallViewModel(login, password, friendAvatar, friendLogin, address_ip, call_id, state,this);
             cvm.RequestClose += new EventHandler(CloseWindow);
             DataContext = cvm;
+
+            if (!cvm.CallModel.IsNotInLocalNewtwork)
+            {
+                cvm.sendHi();
+
+                System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+                dispatcherTimer.Tick += dispatcherTimer_Tick;
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                dispatcherTimer.Start();
+            }
+            else
+            {
+                pleaseClose = true;
+                Close();
+            }
         }
 
         public void CloseWindow(Object source, EventArgs args)
         {
             //audioManager.Exit();
+            pleaseClose = true;
             Close();
         }
 
@@ -57,6 +98,22 @@ namespace SkajPajClientWPF.Views
         {
             time++;
             Timer.Text = "Czas: " + timeToString();
+            if (cvm.CallModel.CallState == "create" && time==3)
+            {
+                string tmp = cvm.CallModel.FriendLogin + ": %SYSTEM%PLEASEWAIT";
+                if (cvm.CallModel.Chat[0] == tmp)
+                {
+                    SendButton.IsEnabled = true;
+                    NotWaitToCallButton.IsEnabled = true;
+                    cvm.sendMessage("%SYSTEM%YESIWAIT");
+                }
+                else
+                {
+                    MessageBox.Show("Abonent czasowo niedostępny");
+                    pleaseClose = true;
+                    Close();
+                }
+            }
         }
 
         private string timeToString()
@@ -73,6 +130,19 @@ namespace SkajPajClientWPF.Views
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             cvm.sck.Close();
+        }
+
+        public void scrollToButtom()
+        {
+            Chat.SelectedIndex = 0;
+            Chat.ScrollIntoView(Chat.SelectedIndex);
+        }
+
+        public void ActiveButton()
+        {
+            StartCallButton.IsEnabled = true;
+            NotReceiveButton.IsEnabled = true;
+            SendButton.IsEnabled = true;
         }
     }
 }

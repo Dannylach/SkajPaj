@@ -20,7 +20,7 @@ namespace SkajPajClientWPF.ViewModels
         private void StartBackgroundWorker()
         {
             cdw = new CallDetectWindow();
-            cdw.Show();
+            //cdw.Show();
 
             if (null == m_oBackgroundWorker)
             {
@@ -162,7 +162,10 @@ namespace SkajPajClientWPF.ViewModels
                 if (call_id != "0")
                 {
                     CallWindow callWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "create");
-                    callWindow.ShowDialog();
+                    if (!callWindow.cvm.CallModel.IsNotInLocalNewtwork)
+                    {
+                        callWindow.ShowDialog();
+                    }
                 }
                 else
                 {

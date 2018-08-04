@@ -35,19 +35,19 @@
             <TextBlock Text="{Binding CallModel.CallState}" TextAlignment="Center" Margin="10" FontSize="15"/>
         </StackPanel>
 
-        <ListBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding CallModel.Chat}" Margin="20"/>
+        <ListView Name="Chat" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding CallModel.Chat}" Margin="20"/>
         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2">
             <TextBox Text="{Binding CallModel.Message}" Margin="20,0,0,10" Width="420"/>
-            <Button Command="{Binding SendMessageCommand}" Content="Wyślij wiadomość" Background="Bisque" Margin="40,0,20,10"/>
+            <Button Name="SendButton" Command="{Binding SendMessageCommand}" Content="Wyślij wiadomość" Background="Bisque" Margin="40,0,20,10"/>
         </StackPanel>
 
-        <Button Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="150" Content="Zrezygnuj z połączenia" Height="30" Command="{Binding EndCallNotWaitCommand}" Background="OrangeRed" Visibility="{Binding CallModel.OpenCallVisibility}"/>
+        <Button Name="NotWaitToCallButton" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="150" Content="Zrezygnuj z połączenia" Height="30" Command="{Binding EndCallNotWaitCommand}" Background="OrangeRed" Visibility="{Binding CallModel.OpenCallVisibility}"/>
 
-        <Button Grid.Row="4" Grid.Column="1" Width="120" Content="Odrzuć" Height="30" Command="{Binding Command}" Background="#57c86c" Visibility="{Binding CallModel.DecisionCallVisibility}" HorizontalAlignment="Left" Margin="90,10,0,10"/>
-        <Button Grid.Row="4" Grid.Column="2" Content="Odbierz" Width="120" Height="30" Command="{Binding Command}" Background="#FE3C2E" Visibility="{Binding CallModel.DecisionCallVisibility}"/>
+        <Button Name="StartCallButton" Grid.Row="4" Grid.Column="1" Width="120" Content="Odbierz" Height="30" Command="{Binding StartCallCommand}" Background="#57c86c" Visibility="{Binding CallModel.DecisionCallVisibility}" HorizontalAlignment="Left" Margin="90,10,0,10"/>
+        <Button Name="NotReceiveButton" Grid.Row="4" Grid.Column="2" Content="Odrzuć" Width="120" Height="30" Command="{Binding NotReceiveCommand}" Background="#FE3C2E" Visibility="{Binding CallModel.DecisionCallVisibility}"/>
 
-        <Button Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="130" Content="Zakończ połączenie" Height="30" Command="{Binding Command}" Background="Red" Visibility="{Binding CallModel.VoiceCallVisibility}"/>
-        <Button Grid.Row="4" Grid.Column="1" Width="120" Content="Wycisz" Height="30" Command="{Binding Command}" Background="Gold" Visibility="{Binding CallModel.VoiceCallVisibility}" HorizontalAlignment="Left" Margin="90,10,0,10"/>
-        <Button Grid.Row="4" Grid.Column="2" Content="Wyłącz mikrofon" Width="120" Height="30" Command="{Binding Command}" Background="Goldenrod" Visibility="{Binding CallModel.VoiceCallVisibility}"/>
+        <Button Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Width="130" Content="Zakończ połączenie" Height="30" Command="{Binding EndCallCommand}" Background="Red" Visibility="{Binding CallModel.VoiceCallVisibility}"/>
+        <Button Grid.Row="4" Grid.Column="1" Width="120" Content="Wycisz" Height="30" Command="{Binding MuteCommand}" Background="Gold" Visibility="{Binding CallModel.VoiceCallVisibility}" HorizontalAlignment="Left" Margin="90,10,0,10"/>
+        <Button Grid.Row="4" Grid.Column="2" Content="Wyłącz mikrofon" Width="120" Height="30" Command="{Binding MicroCommand}" Background="Goldenrod" Visibility="{Binding CallModel.VoiceCallVisibility}"/>
     </Grid>
 </Window>

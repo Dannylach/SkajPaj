@@ -52,8 +52,9 @@ namespace SkajPajClientWPF.Models
             changeState(CallState);
         }
 
-        private void changeState(string s)
+        public void changeState(string s)
         {
+            CallState = s;
             OpenCallVisibility = "Hidden";
             DecisionCallVisibility = "Hidden";
             VoiceCallVisibility = "Hidden";
@@ -78,21 +79,28 @@ namespace SkajPajClientWPF.Models
         public string OpenCallVisibility
         {
             get { return _button1Visibity; }
-            set { _button1Visibity = value; }
+            set { _button1Visibity = value;
+                OnPropertyChanged();
+
+            }
         }
         
         private string _button2Visibity;
         public string DecisionCallVisibility
         {
             get { return _button2Visibity; }
-            set { _button2Visibity = value; }
+            set { _button2Visibity = value;
+                OnPropertyChanged();
+            }
         }
 
         private string _button4Visibity;
         public string VoiceCallVisibility
         {
             get { return _button4Visibity; }
-            set { _button4Visibity = value; }
+            set { _button4Visibity = value;
+                OnPropertyChanged();
+            }
         }
 
 
@@ -101,5 +109,9 @@ namespace SkajPajClientWPF.Models
 
         private ObservableCollection<string> _chat = new ObservableCollection<string>();
         public ObservableCollection<string> Chat { get => _chat; set => _chat = value; }
+
+        private bool _isNotInLocalNewtwork = false;
+        public bool IsNotInLocalNewtwork { get => _isNotInLocalNewtwork; set => _isNotInLocalNewtwork = value; }
+
     }
 }

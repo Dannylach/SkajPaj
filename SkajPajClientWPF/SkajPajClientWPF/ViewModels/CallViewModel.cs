@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Threading;
+using SkajPajClientWPF.Views;
 
 namespace SkajPajClientWPF.ViewModels
 {
@@ -34,13 +35,17 @@ namespace SkajPajClientWPF.ViewModels
         private string MY_ADDRESS_IP = string.Empty;
         private string FRIEND_PORT = string.Empty;
 
+        public CallWindow callWindow;
+        
         public CallViewModel()
         {
             
         }
 
-        public CallViewModel(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state)
+        public CallViewModel(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state, CallWindow window)
         {
+            callWindow = window;
+
             CallModel = new CallModel(login, password, friendAvatar, friendLogin, address_ip, call_id, state);
 
             CallModel.Message = "message";
@@ -78,24 +83,9 @@ namespace SkajPajClientWPF.ViewModels
             }
             catch (Exception exp)
             {
-                MessageBox.Show(exp.ToString());
-            }
-            
-            System.Windows.Application.Current.Dispatcher.Invoke(
-                       (Action)(() => { dispatcherTimer_TickXD(); }));
-        }
-
-        private void dispatcherTimer_TickXD()
-        {
-            if (CallModel.CallState == "create")
-            {
-                sendMessage("%" + CallModel.Login + " call to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
-                sendMessage("%" + CallModel.Login + " call to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
-            }
-            else
-            {
-                sendMessage("%" + CallModel.Login + " hi to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
-                sendMessage("%" + CallModel.Login + " hi to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
+                //MessageBox.Show(exp.ToString());
+                MessageBox.Show(friendLogin + " prawdopodobnie nie jest w sieci lokalnej i połączenie z niem nie jest możliwe.");
+                CallModel.IsNotInLocalNewtwork = true;
             }
         }
 
@@ -114,7 +104,59 @@ namespace SkajPajClientWPF.ViewModels
                     ASCIIEncoding eEncoding = new ASCIIEncoding();
                     string receivedMessage = eEncoding.GetString(receivedData);
                     System.Windows.Application.Current.Dispatcher.Invoke(
-                       (Action)(() => { CallModel.Chat.Add(CallModel.FriendLogin + ": " + receivedMessage); }));
+                       (Action)(() => {
+                           CallModel.Chat.Insert(0,CallModel.FriendLogin + ": " + clearMessage(receivedMessage));
+                           callWindow.scrollToButtom();
+                       }
+                    ));
+
+                    if(clearMessage(receivedMessage) == "%SYSTEM%YESIWAIT" && CallModel.CallState == "select")
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(
+                           (Action)(() => {
+                               callWindow.ActiveButton();
+                           }
+                        ));
+                    }
+
+                    if (clearMessage(receivedMessage) == "%SYSTEM%INOTRECEIVECALL" && CallModel.CallState == "create")
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(
+                           (Action)(() => {
+                               MessageBox.Show(CallModel.FriendLogin + " niechce odebrać połączenia.");
+                               CloseWindow();
+                           }
+                        ));
+                    }
+
+                    if (clearMessage(receivedMessage) == "%SYSTEM%IRESIGNEDCALL" && CallModel.CallState == "select")
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(
+                           (Action)(() => {
+                               MessageBox.Show(CallModel.FriendLogin + " zrezygnował z połączenia.");
+                               CloseWindow();
+                           }
+                        ));
+                    }
+
+                    if (clearMessage(receivedMessage) == "%SYSTEM%STARTCALL" && CallModel.CallState == "create")
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(
+                           (Action)(() => {
+                               StartCall();
+                           }
+                        ));
+                    }
+
+                    if (clearMessage(receivedMessage) == "%SYSTEM%IENDCALL" && CallModel.CallState == "call")
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(
+                           (Action)(() => {
+                               MessageBox.Show(CallModel.FriendLogin + " zakończył połączenie.");
+                               CloseWindow();
+                           }
+                        ));
+                    }
                 }
 
                 byte[] buffer = new byte[1500];
@@ -122,11 +164,21 @@ namespace SkajPajClientWPF.ViewModels
             }
             catch (Exception exp)
             {
-                MessageBox.Show(exp.ToString());
+                //MessageBox.Show(exp.ToString());
             }
         }
 
-        private void sendMessage(string buf)
+        private string clearMessage(string buf)
+        {
+            string result = string.Empty;
+            foreach (char sign in buf)
+            {
+                if (sign != '\0') result += sign;
+            }
+            return result;
+        }
+
+        public void sendMessage(string buf)
         {
             try
             {
@@ -135,7 +187,10 @@ namespace SkajPajClientWPF.ViewModels
                 msg = enc.GetBytes(buf);
                 
                 System.Windows.Application.Current.Dispatcher.Invoke(
-                       (Action)(() => { CallModel.Chat.Add("Ja: " + buf); }));
+                       (Action)(() => {
+                           CallModel.Chat.Insert(0,"Ja: " + buf);
+                           callWindow.scrollToButtom();
+                       }));
                 sck.Send(msg);
             }
             catch (Exception exp)
@@ -166,7 +221,55 @@ namespace SkajPajClientWPF.ViewModels
 
         private void EndCall()
         {
-            MessageBox.Show("XZD");
+            sendMessage("%SYSTEM%IENDCALL");
+            CloseWindow();
         }
+
+        public void sendHi()
+        {
+            if (CallModel.CallState == "create")
+            {
+                Thread.Sleep(3000);
+                sendMessage("%" + CallModel.Login + " call to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
+                sendMessage("%" + CallModel.Login + " call to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
+            }
+            else if (CallModel.CallState == "select")
+            {
+                sendMessage("%" + CallModel.Login + " hi to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
+                sendMessage("%" + CallModel.Login + " hi to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
+                sendMessage("%SYSTEM%PLEASEWAIT");
+            }
+        }
+        
+        public ICommand StartCallCommand { get { return new RelayCommand(StartCall); } }
+
+        private void StartCall()
+        {
+            sendMessage("%SYSTEM%STARTCALL");
+            startCall();
+            //AUDIO START...
+        }
+
+        public ICommand NotReceiveCommand { get { return new RelayCommand(NotReceive); } }
+
+        private void NotReceive()
+        {
+            sendMessage("%SYSTEM%INOTRECEIVECALL");
+            CloseWindow();
+        }
+
+        public ICommand EndCallNotWaitCommand { get { return new RelayCommand(EndCallNotWait); } }
+
+        private void EndCallNotWait()
+        {
+            sendMessage("%SYSTEM%IRESIGNEDCALL");
+            CloseWindow();
+        }
+        
+        private void startCall()
+        {
+            CallModel.changeState("call");
+        }
+       
     }
 }
