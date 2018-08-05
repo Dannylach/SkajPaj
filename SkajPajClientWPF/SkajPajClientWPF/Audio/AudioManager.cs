@@ -96,7 +96,13 @@ namespace SkajPajClientWPF.Audio
         public void StartCall(string ip)
         {
 
-            ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 40015);
+            if (ipEndPoint==null)
+            {
+                ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 40015);
+            }else if(ipEndPoint.Address!= IPAddress.Parse(ip))
+            {
+                ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), 40015);
+            }
             udpClient.Send(new byte[1], 1, ipEndPoint);
             recieve_thread = new Thread(AudioReceive);
             recieve_thread.Start();
