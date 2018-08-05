@@ -82,9 +82,10 @@ namespace SkajPajClientWPF.Audio
                 this.password = password;
                 UDPListener();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 //TODO Signal error
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -175,7 +176,7 @@ namespace SkajPajClientWPF.Audio
             }
             catch (Exception ex)
             {
-                
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -194,6 +195,7 @@ namespace SkajPajClientWPF.Audio
             catch (Exception ex)
             {
                 //TODO Signal error
+                MessageBox.Show(ex.ToString());
             }
         }
         
