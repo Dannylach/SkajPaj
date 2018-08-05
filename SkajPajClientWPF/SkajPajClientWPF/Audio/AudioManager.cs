@@ -39,7 +39,7 @@ namespace SkajPajClientWPF.Audio
         /// Initializes all vital instances.
         /// </summary>
         /// <param name="userLogin">The user login.</param>
-        public void Initialize(string userLogin)
+        public void Initialize(string userLogin, UdpClient udp)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace SkajPajClientWPF.Audio
                 memoryStream = new MemoryStream();
                 waveWriter = new WaveFileWriter(memoryStream, waveIn.WaveFormat);
 
-                udpClient = new UdpClient(port);
+                udpClient = udp;
             }
             catch (Exception ex)
             {
@@ -263,7 +263,7 @@ namespace SkajPajClientWPF.Audio
         void AnswerHello(string ipAddress)
         {
             callersIpAddress = ipAddress;
-            CallWindow cw = new CallWindow(login, password, null, friendLogin, GetLocalIPAddress(), ipAddress, state);
+            //CallWindow cw = new CallWindow(login, password, null, friendLogin, GetLocalIPAddress(), ipAddress, state, udpClient);
             StartCall(ipAddress);
         }
 

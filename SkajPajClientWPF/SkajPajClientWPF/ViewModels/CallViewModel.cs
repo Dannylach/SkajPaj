@@ -44,11 +44,11 @@ namespace SkajPajClientWPF.ViewModels
         }
 
         public AudioManager AudioManager = new AudioManager();
-
-        public CallViewModel(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state, CallWindow window)
+        private UdpClient udpClient;
+        public CallViewModel(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state, CallWindow window, UdpClient udp)
         {
             callWindow = window;
-
+            udpClient = udp;
             CallModel = new CallModel(login, password, friendAvatar, friendLogin, address_ip, call_id, state);
 
             CallModel.Message = "message";
@@ -278,7 +278,7 @@ namespace SkajPajClientWPF.ViewModels
             CallModel.changeState("call");
             //AUDIO START...
             AudioManager = new AudioManager();
-            AudioManager.Initialize(CallModel.FriendLogin);
+            AudioManager.Initialize(CallModel.FriendLogin, udpClient);
             AudioManager.StartCall(CallModel.FriendAddressIP);
             AudioManager.ListenForMessage("XD", "XD");
 

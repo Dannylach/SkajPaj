@@ -17,6 +17,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.ComponentModel;
+using System.Net.Sockets;
 
 namespace SkajPajClientWPF.Views
 {
@@ -52,7 +53,7 @@ namespace SkajPajClientWPF.Views
             }
         }*/
 
-        public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state)
+        public CallWindow(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state, UdpClient udp)
         {
             InitializeComponent();
             var hwnd = new WindowInteropHelper(this).Handle;
@@ -67,7 +68,7 @@ namespace SkajPajClientWPF.Views
             NotReceiveButton.IsEnabled = false;
             StartCallButton.IsEnabled = false;
 
-            cvm = new CallViewModel(login, password, friendAvatar, friendLogin, address_ip, call_id, state,this);
+            cvm = new CallViewModel(login, password, friendAvatar, friendLogin, address_ip, call_id, state,this,udp);
             cvm.RequestClose += new EventHandler(CloseWindow);
             DataContext = cvm;
 

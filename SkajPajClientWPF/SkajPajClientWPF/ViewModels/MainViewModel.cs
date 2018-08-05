@@ -7,6 +7,7 @@ using System.Windows.Input;
 using SkajPajClientWPF.Audio;
 using System.ComponentModel;
 using System.Threading;
+using System.Net.Sockets;
 
 namespace SkajPajClientWPF.ViewModels
 {
@@ -96,7 +97,7 @@ namespace SkajPajClientWPF.ViewModels
             cdw.Close();
         }
         //end detect call
-         
+        private UdpClient udpClient = new UdpClient();
         public MainViewModel(string login, string password)
         {
             MainModel = new MainModel();
@@ -161,7 +162,7 @@ namespace SkajPajClientWPF.ViewModels
 
                 if (call_id != "0")
                 {
-                    CallWindow callWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "create");
+                    CallWindow callWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "create",udpClient);
                     if (!callWindow.cvm.CallModel.IsNotInLocalNewtwork)
                     {
                         callWindow.ShowDialog();
@@ -184,7 +185,7 @@ namespace SkajPajClientWPF.ViewModels
         public void ReceiveCall(string login, string avatar, string address_ip, string call_id)
         {
             StopBackgroundWorker();
-            CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "select");
+            CallWindow loginnWindow = new CallWindow(MainModel.UserData.Login, MainModel.UserData.Password, avatar, login, address_ip, call_id, "select",udpClient);
             loginnWindow.ShowDialog();
             UpdateCallList();
             StartBackgroundWorker();
