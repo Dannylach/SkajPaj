@@ -97,9 +97,11 @@ namespace SkajPajClientWPF.ViewModels
             cdw.Close();
         }
         //end detect call
-        private UdpClient udpClient = new UdpClient(40015);
+        private UdpClient udpClient;// = new UdpClient();
         public MainViewModel(string login, string password)
         {
+            //udpClien
+            udpClient = new UdpClient(40016);
             MainModel = new MainModel();
             //AudioManager = new AudioManager();
             //AudioManager.Initialize(login);
@@ -203,6 +205,7 @@ namespace SkajPajClientWPF.ViewModels
 
         private void CloseWindow()
         {
+            udpClient.Close();
             EventHandler handler = this.RequestClose;
 
             if (handler != null)
