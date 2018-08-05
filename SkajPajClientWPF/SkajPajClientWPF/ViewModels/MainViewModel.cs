@@ -97,7 +97,7 @@ namespace SkajPajClientWPF.ViewModels
             cdw.Close();
         }
         //end detect call
-        private UdpClient udpClient = new UdpClient();
+        private UdpClient udpClient = new UdpClient(40015);
         public MainViewModel(string login, string password)
         {
             MainModel = new MainModel();
