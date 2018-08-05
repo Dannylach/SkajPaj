@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using NAudio.Wave;
 using SkajPajClientWPF.Views;
 
@@ -43,13 +44,13 @@ namespace SkajPajClientWPF.Audio
             try
             {
                 clientName = userLogin;
-                udpClient = new UdpClient(port);
+                //udpClient = new UdpClient(port);
 
                 waveIn = new WaveIn();
                 waveIn.BufferMilliseconds = 100;
                 waveIn.NumberOfBuffers = 10;
                 waveOut = new WaveOut();
-                ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.43.227"), port);
+                //ipEndPoint = new IPEndPoint(IPAddress.Parse("192.168.43.227"), port);
 
                 waveIn.DeviceNumber = 0;
                 waveIn.DataAvailable += new EventHandler<WaveInEventArgs>(waveIn_DataAvailable);
@@ -60,11 +61,12 @@ namespace SkajPajClientWPF.Audio
                 memoryStream = new MemoryStream();
                 waveWriter = new WaveFileWriter(memoryStream, waveIn.WaveFormat);
 
-                udpClient = new UdpClient(40015);
+                udpClient = new UdpClient(port);
             }
             catch (Exception ex)
             {
                 //TODO Signal error
+                MessageBox.Show(ex.ToString());
             }
         }
 

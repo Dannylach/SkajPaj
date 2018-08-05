@@ -291,6 +291,25 @@ namespace SkajPajClientWPF
             return false;
         }
 
+        public bool EndCall(string login, string password, string call_id)
+        {
+            string request = SERVER_DOMAIN + END_CALL + "login=" + login + "&password=" + password + "&call_id=" + call_id;
+            string json = makeRequest(request);
+
+            try
+            {
+                EndCallRequest endCallRequest = JsonConvert.DeserializeObject<EndCallRequest>(json);
+
+                return endCallRequest.end_call;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            return false;
+        }
+
         public DetectCallRequest DetectCall(string login, string password)
         {
             string request = SERVER_DOMAIN + CALL_DETECT + "login=" + login + "&password=" + password;

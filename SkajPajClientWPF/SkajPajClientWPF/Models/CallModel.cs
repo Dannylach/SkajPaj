@@ -113,5 +113,8 @@ namespace SkajPajClientWPF.Models
         private bool _isNotInLocalNewtwork = false;
         public bool IsNotInLocalNewtwork { get => _isNotInLocalNewtwork; set => _isNotInLocalNewtwork = value; }
 
+        private RestWebApiRequest _restWebApiRequest = new RestWebApiRequest();
+        public RestWebApiRequest RestWebApiRequest { get => _restWebApiRequest; set => _restWebApiRequest = value; }
+
     }
 }

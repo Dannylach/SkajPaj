@@ -120,4 +120,10 @@ namespace SkajPajClientWPF.Objects
         public bool detect_call;
         public int delta_time;
     }
+
+    public class EndCallRequest
+    {
+        public string message;
+        public bool end_call;
+    }
 }

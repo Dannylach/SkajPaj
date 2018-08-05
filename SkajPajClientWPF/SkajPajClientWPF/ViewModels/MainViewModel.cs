@@ -96,7 +96,7 @@ namespace SkajPajClientWPF.ViewModels
             cdw.Close();
         }
         //end detect call
-
+         
         public MainViewModel(string login, string password)
         {
             MainModel = new MainModel();

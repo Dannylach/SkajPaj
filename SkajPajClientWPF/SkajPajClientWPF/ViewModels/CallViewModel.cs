@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Threading;
 using SkajPajClientWPF.Views;
+using SkajPajClientWPF.Audio;
 
 namespace SkajPajClientWPF.ViewModels
 {
@@ -41,6 +42,8 @@ namespace SkajPajClientWPF.ViewModels
         {
             
         }
+
+        public AudioManager AudioManager = new AudioManager();
 
         public CallViewModel(string login, string password, string friendAvatar, string friendLogin, string address_ip, string call_id, string state, CallWindow window)
         {
@@ -153,6 +156,7 @@ namespace SkajPajClientWPF.ViewModels
                         System.Windows.Application.Current.Dispatcher.Invoke(
                            (Action)(() => {
                                MessageBox.Show(CallModel.FriendLogin + " zakończył połączenie.");
+                               endCall();
                                CloseWindow();
                            }
                         ));
@@ -222,6 +226,7 @@ namespace SkajPajClientWPF.ViewModels
         private void EndCall()
         {
             sendMessage("%SYSTEM%IENDCALL");
+            endCall();
             CloseWindow();
         }
 
@@ -243,11 +248,13 @@ namespace SkajPajClientWPF.ViewModels
         
         public ICommand StartCallCommand { get { return new RelayCommand(StartCall); } }
 
+        private string pastState = string.Empty;
         private void StartCall()
         {
             sendMessage("%SYSTEM%STARTCALL");
+            pastState = CallModel.CallState;
             startCall();
-            //AUDIO START...
+            
         }
 
         public ICommand NotReceiveCommand { get { return new RelayCommand(NotReceive); } }
@@ -269,7 +276,25 @@ namespace SkajPajClientWPF.ViewModels
         private void startCall()
         {
             CallModel.changeState("call");
+            //AUDIO START...
+            AudioManager = new AudioManager();
+            AudioManager.Initialize(CallModel.FriendLogin);
+            AudioManager.StartCall(CallModel.FriendAddressIP);
+            AudioManager.ListenForMessage("XD", "XD");
+
+            if (pastState == "create")
+            {
+                CallModel.RestWebApiRequest.ReceivedCall(CallModel.Login, CallModel.Password, CallModel.CallID, "true");
+            }
         }
        
+        private void endCall()
+        {
+            AudioManager.Exit();
+            if (pastState == "create")
+            {
+                CallModel.RestWebApiRequest.EndCall(CallModel.Login, CallModel.Password, CallModel.CallID);
+            }
+        }
     }
 }
