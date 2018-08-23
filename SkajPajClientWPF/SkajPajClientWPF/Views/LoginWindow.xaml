@@ -28,7 +28,7 @@
             <TextBlock Text="Login" TextAlignment="Center"/>
             <TextBox Margin="80,0,80,5" Text="{Binding Path = LoginModel.Login, Mode = TwoWay}"/>
             <TextBlock Text="Hasło" TextAlignment="Center"/>
-            <PasswordBox Name="passwordBox" PasswordChar="•" Margin="80,0,80,10" Password=""/>
+            <PasswordBox Name="passwordBox" PasswordChar="•" Margin="80,0,80,10" Password="testtest"/>
             <Button Content="Zaloguj się" Margin="120,0,120,0" Height="30" Command="{Binding SignInCommand}" CommandParameter="{Binding ElementName=passwordBox}"/>
             <Button Name="OpenRegistrationButton" Content="Zarejestruj się" Margin="120,20,120,0" Height="30" Command="{Binding OpenRegistrationWindowCommand}" />
         </StackPanel>

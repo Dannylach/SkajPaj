@@ -76,7 +76,7 @@
                             <TextBlock Text="{Binding StartDateString}"/>
                             <TextBlock Text="{Binding Time}"/>
                         </StackPanel>
-                        <Button Content="Zadzwoń" Background="LawnGreen" Margin="15,15,0,15" Width="70"  Command="{Binding CallFriendCommand}" Visibility="Hidden"/>
+                        <Button Content="Zadzwoń" Background="LawnGreen" Margin="15,15,0,15" Width="70"  Command="{Binding CallFriendCommand}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
