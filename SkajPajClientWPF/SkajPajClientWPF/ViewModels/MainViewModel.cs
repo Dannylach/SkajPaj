@@ -101,7 +101,7 @@ namespace SkajPajClientWPF.ViewModels
         public MainViewModel(string login, string password)
         {
             //udpClien
-            udpClient = new UdpClient(3000);
+            udpClient = new UdpClient(40016);
             MainModel = new MainModel();
             //AudioManager = new AudioManager();
             //AudioManager.Initialize(login);
