@@ -49,7 +49,7 @@ namespace SkajPajClientWPF.ViewModels
             {
                 if (!LoginModel.RestWebApiRequest.SignIn(LoginModel.Login, LoginModel.Password))
                 {
-                    MessageBox.Show("Nieudało się zalogować. Prawdopodobnie login lub hasło jest niepoprawne.");
+                    MessageBox.Show("Nieudało się zalogować. Prawdopodobnie login lub hasło jest niepoprawne. Lub nie masz dostępu do sieci internet.");
                 }
                 else
                 {

@@ -99,7 +99,7 @@ namespace SkajPajClientWPF.Views
         {
             time++;
             Timer.Text = "Czas: " + timeToString();
-            if (cvm.CallModel.CallState == "create" && time==3)
+            if (cvm.CallModel.CallState == "create" && time==7)
             {
                 string tmp = cvm.CallModel.FriendLogin + ": %SYSTEM%PLEASEWAIT";
                 if (cvm.CallModel.Chat[0] == tmp)
@@ -107,6 +107,7 @@ namespace SkajPajClientWPF.Views
                     SendButton.IsEnabled = true;
                     NotWaitToCallButton.IsEnabled = true;
                     cvm.sendMessage("%SYSTEM%YESIWAIT");
+                    cvm.CallModel.Chat.Clear();
                 }
                 else
                 {
