@@ -25,9 +25,8 @@ namespace SkajPajClientWPF.ViewModels
             tmp.Add(new Log("test", "test"));
             Logs = tmp;
         }
-
-        
     }
+
     public class Log : ObservableObject
     {
         private DateTime time;

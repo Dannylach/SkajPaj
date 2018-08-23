@@ -235,13 +235,13 @@ namespace SkajPajClientWPF.ViewModels
             if (CallModel.CallState == "create")
             {
                 Thread.Sleep(3000);
-                sendMessage("%" + CallModel.Login + " call to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
-                sendMessage("%" + CallModel.Login + " call to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
+                //sendMessage("%" + CallModel.Login + " call to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
+                //sendMessage("%" + CallModel.Login + " call to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
             }
             else if (CallModel.CallState == "select")
             {
-                sendMessage("%" + CallModel.Login + " hi to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
-                sendMessage("%" + CallModel.Login + " hi to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
+                //sendMessage("%" + CallModel.Login + " hi to you MY DATA" + MY_ADDRESS_IP + " " + MY_PORT);
+                //sendMessage("%" + CallModel.Login + " hi to you YOUR DATA" + CallModel.FriendAddressIP + " " + FRIEND_PORT);
                 sendMessage("%SYSTEM%PLEASEWAIT");
             }
         }

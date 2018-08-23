@@ -36,27 +36,28 @@ namespace SkajPajClientWPF.ViewModels
             if (RegistrationModel.Login.Length < 3)
             {
                 MessageBox.Show("Zbyt krótki login!");
+                return;
             }
-            else if (RegistrationModel.Password.Length < 8)
+            if (password.ToString().Length < 8)
             {
                 MessageBox.Show("Zbyt krótkie hasło!");
+                return;
             }
-            else if (RegistrationModel.Login == RegistrationModel.Password)
+            if (RegistrationModel.Login == RegistrationModel.Password)
             {
                 MessageBox.Show("Hasło identyczne jak login!");
+                return;
+            }
+
+            //MessageBox.Show("|" + RegistrationModel.Login + "|" + RegistrationModel.Password + "|" + RegistrationModel.Avatar + "|" + RegistrationModel.AddressIP + "|");
+            if(!RegistrationModel.RestWebApiRequest.CreateAccount(RegistrationModel.Login, RegistrationModel.Password, RegistrationModel.Avatar, RegistrationModel.AddressIP))
+            {
+                MessageBox.Show("Nieudało się utworzyć konta. Prawdopodobnie login jest już zajęty.");
             }
             else
             {
-                //MessageBox.Show("|" + RegistrationModel.Login + "|" + RegistrationModel.Password + "|" + RegistrationModel.Avatar + "|" + RegistrationModel.AddressIP + "|");
-                if(!RegistrationModel.RestWebApiRequest.CreateAccount(RegistrationModel.Login, RegistrationModel.Password, RegistrationModel.Avatar, RegistrationModel.AddressIP))
-                {
-                    MessageBox.Show("Nieudało się utworzyć konta. Prawdopodobnie login jest już zajęty.");
-                }
-                else
-                {
-                    MessageBox.Show("Udało się utworzyć konto.");
-                    CloseWindow();
-                }
+                MessageBox.Show("Udało się utworzyć konto.");
+                CloseWindow();
             }
             
         }
